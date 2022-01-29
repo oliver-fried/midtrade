@@ -11,7 +11,7 @@ import { getStorage, uploadBytesResumable, getDownloadURL, ref } from "firebase/
 const Post = ({ history }) => {
   const [pending, setPending] = useState(false);
 
-  const storage1 = getStorage();
+  const storage1 = getDatabase();
 
   const [postTitle, setPostTitle] = useState("");
   const [price, setPrice] = useState("");
@@ -74,7 +74,7 @@ const Post = ({ history }) => {
       // Create a root reference
       const db = getDatabase();
 
-      const storage = getStorage();
+      const storage = getDatabase();
 
 
     
