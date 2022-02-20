@@ -1,24 +1,44 @@
+// Code for About page, no JS, just HTML and some CSS for styling
+//
+// Oliver Fried, January 2021
+
 import React from "react";
 import { Navigation } from "./"
+import { Footer } from "./"
 
 function About() {
+
+  // CSS Style Block 
+  const fH = {
+    display: "inline-block",
+    height: "90vh", /*THis will set height equal to the height of windows*/
+    width: "100vw" /*This will set width equal to width of windows*/
+    }
+
   return (
-    <div className="about">
+    <div>
       <Navigation />
-      <div class="container">
-      <div class="row align-items-center my-5">
+      <div class="row" style={fH}>
           
-          <div class="col-md-6 offset-md-3">
-            <h1 class="font-weight-light">About</h1>
-            <p>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book.
+          <div class="mt-3 col-md-6 offset-md-3">
+
+            <h1 class=" font-weight-light">About</h1>
+
+            <p class="lead">
+            Midtrade (or Midtrade.us) is in no way affiliated with the United States Naval Academy, the US Navy, the Department of Defense, or the US Government.
             </p>
+            
+            <p class="lead">
+            If you want to help maintain/develop this project, email me at m241932@usna.edu or text me
+            at 508-850-6770.
+            </p>
+
+            
+
           </div>
         </div>
-      </div>
+      
+      <Footer />
     </div>
   );
 }

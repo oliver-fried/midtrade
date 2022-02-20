@@ -1,8 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { Home, About, Post, TermsAndConditions, Login, Buying, Request, Dashboard, DashboardRequests } from "./components";
+import { Home, About, Post, TermsOfUse, Login, Buying, Request, Dashboard, DashboardRequests, PlannedFeatures} from "./components";
 import PrivateRoute from "./PrivateRoute";
 import { AuthProvider } from "./Auth"
+import { Footer } from "./components/"
 
 function App() {
 
@@ -19,7 +20,8 @@ function App() {
           <PrivateRoute exact path="/post" component={() => <Post />} />
           <PrivateRoute exact path="/about" component={() => <About />} />
           <PrivateRoute exact path="/request" component={() => <Request />} />
-          <PrivateRoute exact path="/terms-and-conditions" component={() => <TermsAndConditions />} />
+          <PrivateRoute exact path="/plannedFeatures" component={() => <PlannedFeatures />} />
+          <PrivateRoute exact path="/terms-of-use" component={() => <TermsOfUse />} />
           <Route path="/login" component={() => <Login />} />
           <PrivateRoute exact path="/dashboard-requests" component={() => <DashboardRequests />} />
 
@@ -27,7 +29,9 @@ function App() {
           
           
         </Switch>
+
       </Router>
+      
       </AuthProvider>
     </div>
   );

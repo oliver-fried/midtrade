@@ -7,6 +7,7 @@ import { getDatabase, query, limitToLast, ref, onValue, set} from "firebase/data
 
 
 
+
 const PostComments = ({postID, initials}) => {
     const [comment, setComment] = useState("");
     const [postTitle, setPostTitle] = useState("");
@@ -38,15 +39,10 @@ const PostComments = ({postID, initials}) => {
     return (
         <AuthProvider>
 
-            <form onSubmit={handleSubmit(postID, comment)}>
-                <div class="input-group mb-3">
-                <input type="text" class="form-control" id="formGroupExampleInput" placeholder={placeHolder(initials)} value={comment} onChange={(e) => setComment(e.target.value)} required/>
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-primary" type="button">Post</button>
-                    </div>
-                </div>
-            </form>
-            <h5>Comments</h5>
+            
+               
+        
+            <h5>Commentsasdfdsa</h5>
                                 
             
             

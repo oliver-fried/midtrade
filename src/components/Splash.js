@@ -1,7 +1,7 @@
 import React from "react";
 
 
-function Splash(props) {
+function Splash() {
   return (
     
     <div className="home">

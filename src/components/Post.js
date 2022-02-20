@@ -50,9 +50,17 @@ const Post = ({ history }) => {
     img.src = event.target.result;
     setImageAttached(true);
   }
+
+  if(fileImage && fileImage.type.match('image.*')){
   reader.readAsDataURL(fileImage);
+  }
+
+  else  {
+      setImageAttached(false);
+    }
+  }
   
-}
+
 
 
     
@@ -74,7 +82,7 @@ const Post = ({ history }) => {
       // Create a root reference
       const db = getDatabase();
 
-      const storage = getDatabase();
+      const storage = getStorage();
 
 
     
@@ -214,7 +222,7 @@ uploadTask.on('state_changed',
           <div class="mt-3">
           <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required></input>
           <label class="form-check-label" for="invalidCheck">
-         I agree to the</label> <a class="text-decoration-none" data-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"> terms and conditions</a>
+         I agree to the</label> <a class="text-decoration-none" target="_blank" href="/terms-of-use"> terms of use</a>
           
           </div>
           <div class="invalid-feedback">
@@ -224,11 +232,7 @@ uploadTask.on('state_changed',
         </div>
 
         <div class="collapse mt-3" id="collapseExample">
-        <div class="card card-body">
-            <p>
-              You are responsible for anything you post. If it is bad we will take it down and you'll be held responsible. 
-            </p>
-        </div>
+        
         </div>
                 <div class="mt-4">
                 
@@ -236,7 +240,7 @@ uploadTask.on('state_changed',
                   <button type="submit" class="btn btn-primary" disabled={pending}>Submit</button></div>
                 </div>
                 
-                <div><canvas id='imgCanvas' class="bg-primary"></canvas></div>
+                <div><canvas id='imgCanvas'></canvas></div>
                 
                 
             </form>
