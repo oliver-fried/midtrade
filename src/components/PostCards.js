@@ -150,7 +150,7 @@ const PostCards = () => {
                 <div>
                     {posts ? postCommentsArray.map((comment) => <div class="">
                         <div class="row mb-3">
-                            <div class="col-1 m-2" style={collumnStyle}>
+                            <div class="col-1 m-1" style={collumnStyle}>
                                 <span class="align-middle"><img class="rounded-circle img-responsive"  style={proPicStyle} src={comment.userProPicURL} /></span>
                             </div>
                             <div class="col-9 m-1">
