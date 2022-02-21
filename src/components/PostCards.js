@@ -213,6 +213,16 @@ const PostCards = () => {
         }
     }
 
+    function pricePrinting(givenPrice) {
+        if(givenPrice == 0) {
+            return <>Free</>
+        }
+
+        else {
+            return <>${givenPrice}</>
+        }
+    }
+
 
     //--------------------------
     //       CSS STYLES      
@@ -274,7 +284,7 @@ const PostCards = () => {
                                             <h3>{post.postTitle}</h3>
                                         </div>
                                         <div class="col-auto">
-                                            <h3 class="text-right text-success">${post.price}</h3>
+                                            <h3 class="text-right text-success">{pricePrinting(post.price)}</h3>
                                         </div>
 
 
@@ -340,7 +350,7 @@ const PostCards = () => {
                                             <h3>{post.postTitle}</h3>
                                         </div>
                                         <div class="col-auto">
-                                            <h3 class="text-right text-success">${post.price}</h3>
+                                            <h3 class="text-right text-success">{pricePrinting(post.price)}</h3>
                                         </div>
 
 

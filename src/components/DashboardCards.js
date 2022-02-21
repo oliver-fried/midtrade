@@ -122,6 +122,17 @@ const fetchMorePosts = (key) => {
   };
 
 
+  function pricePrinting(givenPrice) {
+    if(givenPrice == 0) {
+        return <>Free</>
+    }
+
+    else {
+        return <>${givenPrice}</>
+    }
+}
+
+
 
 
 
@@ -575,7 +586,7 @@ const fetchMorePosts = (key) => {
                                         </div>
                                         <div class="col-auto">
                                         
-                                            <h3 class=" text-success">${post.price}</h3>
+                                            <h3 class=" text-success">{pricePrinting(post.price)}</h3>
                                             
                                         </div>
 
@@ -655,7 +666,7 @@ const fetchMorePosts = (key) => {
                                         </div>
                                         <div class="col-auto">
                                         
-                                            <h3 class=" text-success">${post.price}</h3>
+                                            <h3 class=" text-success">{pricePrinting(post.price)}</h3>
                                             
                                         </div>
 

@@ -251,11 +251,12 @@ uploadTask.on('state_changed',
                 
                 <div class="mb-3">
                     <label for="price" class="form-label"><h5>Price</h5></label>
-                    <input type="number" min="1" step="1" class="form-control" max="9999" id="price" step="1" value={price} onChange={(e) => setPrice(e.target.value)} required/>
+                    <input type="number" min="0"  class="form-control" max="9999" id="price" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} required/>
                     <small id="price" class="form-text text-muted">
-                    The price must be a whole number
+                    Enter 0 for a free item
                     </small>
                 </div>
+                
                 <div class="mb-3">
                     <label for="room" class="form-label"><h5>Room Number</h5></label>
                     <input maxLength="4" pattern="[0-9]{4}" type="number" min="1001" max="8499" step="1" class="form-control" id="room" step="1" value={room} onChange={(e) => setRoom(e.target.value)} required/>
