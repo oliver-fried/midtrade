@@ -15,3 +15,5 @@ export { default as PlannedFeatures } from "./PlannedFeatures";
 export { default as Footer } from "./Footer";
 export { default as DashboardCards } from "./DashboardCards";
 export { default as PostComments } from "./PostComments";
+export { default as Prohibited } from "./Prohibited";
+

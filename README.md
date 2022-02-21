@@ -2,6 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+TO GET THIS RUNNING 
+20 FEB 22
+1. make sure all the source files are there
+2. make sure you can do npx create-react-app PROJECTNAME, cd into PROJECTNAME, and then npm start
+3. we got a bunch of errors that had to do with incorrect module versions (bootstrap, firebase, and react-router)
+4. install correct node_modules or something
+    a. npm install bootstrap-icons
+    b. npm uninstall react-router ... npm install react-router@5.2.0
+    c. npm install firebase
+    d. npm install react-router-dom
+Last step: npm start (should put it on localhost:3000 or whatever)
+
 ## Available Scripts
 
 In the project directory, you can run:

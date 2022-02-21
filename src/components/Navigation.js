@@ -16,7 +16,7 @@ function Navigation(props) {
 
   
   
-  const proPicStyle = {height: "8vw", maxHeight: "50px"}
+  const proPicStyle = {height: "8vw", minHeight: "50px", maxHeight: "50px",}
   return (
     <AuthProvider>
      
@@ -39,7 +39,7 @@ function Navigation(props) {
             
 
 
-              <li class="mt-1 navbar-text nav-ite">
+              <li class="mt-1 ms-2 navbar-text">
                 <a href="/post" class="nav-item navbar-text btn btn-outline-light">              
                   Post 
                 </a>
@@ -47,11 +47,11 @@ function Navigation(props) {
 
 
              
-              <li>
+              <li class="nav-item mb-1">
               
               <a class="btn" type="button" href="/dashboard">
                
-              <img class="rounded-circle " alt="10x10" style={proPicStyle} src={getAuth().currentUser.photoURL} />
+              <img class="rounded-circle"  style={proPicStyle} src={getAuth().currentUser.photoURL} />
               
               </a>
               </li>

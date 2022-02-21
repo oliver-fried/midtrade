@@ -10,14 +10,14 @@ import { auth } from "firebase/auth";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDfHuZVpz-t9DLwjwpQrM0QWM_usMnI04c",
-  authDomain: "midtrade-b872b.firebaseapp.com",
-  databaseURL: "https://midtrade-b872b-default-rtdb.firebaseio.com",
-  projectId: "midtrade-b872b",
-  storageBucket: "midtrade-b872b.appspot.com",
-  messagingSenderId: "882835595317",
-  appId: "1:882835595317:web:2d39af2c80a6fdba73517c",
-  measurementId: "G-HWB9VKGQ4Z"
+  apiKey: "AIzaSyB1yN51equqqnac73upYa5Cm5PlOsTajOw",
+  authDomain: "midtrade-fcbd0.firebaseapp.com",
+  databaseURL: "https://midtrade-fcbd0-default-rtdb.firebaseio.com",
+  projectId: "midtrade-fcbd0",
+  storageBucket: "midtrade-fcbd0.appspot.com",
+  messagingSenderId: "195967808101",
+  appId: "1:195967808101:web:ec0ef691345d542c084c8c",
+  measurementId: "G-D51J1BB270"
 };
 
 // Initialize Firebase

@@ -17,19 +17,55 @@ const Post = ({ history }) => {
   const [price, setPrice] = useState("");
   const [room, setRoom] = useState("");
   const [file, setFile] = useState("");
-  const [imageAttached, setImageAttached] = useState("");
+  const [imageAttached, setImageAttached] = useState(false);
   
   const [description, setDescription] = useState("");
   const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
+  "July", "August", "September", "October", "November", "December"];
+
+  const [progress, setProgress] = useState(0);
+  const [image, setImage] = useState(null);
+  const [url, setUrl] = useState("");
+
+
+
+
+  const handleChange = e => {
+    if (e.target.files[0]) {
+      showOnCanvas(e.target.files[0], true)
+      setImageAttached(true);
+
+      setImage(e.target.files[0]);
+    }
+
+    else {
+      showOnCanvas(e.target.files[0], false)
+      console.log(e.target.files[0]);
+      setImageAttached(false);
+
+    }
+  };
+
+
+
+
+
 
   
-  function uploadImage(fileImage) {
+
+
+
+  // This takes the uploaded image and displays it to the canvas so the 
+  // user knows what they are uploading
+  function showOnCanvas(fileImage, filePresent) {
   
   var canvas = document.getElementById('imgCanvas');
   var ctx = canvas.getContext('2d');
   var reader = new FileReader();
+
+  if(filePresent){
+    
+    
   reader.onload = function(event) {
     var img = new Image();
     img.onload = function() {
@@ -39,32 +75,47 @@ const Post = ({ history }) => {
       var centerShift_x = ( canvas.width - img.width*ratio ) / 2;
       var centerShift_y = ( canvas.height - img.height*ratio ) / 2;  
       ctx.clearRect(0,0,canvas.width, canvas.height);
-      ctx.drawImage(img, 0,0, img.width, img.height, centerShift_x,centerShift_y,img.width*ratio, img.height*ratio);
+      ctx.drawImage(img, 0,0, img.width, img.height,0, 0,img.width*ratio, img.height*ratio);
+      
+
+      
+     
+     
       return new Promise((resolve) => {
         canvas.toBlob((blob) => {
-          resolve(setFile(blob),
+          resolve(
           console.log(file));
         });
       });      
     }
+
+    
     img.src = event.target.result;
-    setImageAttached(true);
   }
 
-  if(fileImage && fileImage.type.match('image.*')){
-  reader.readAsDataURL(fileImage);
-  }
+    if(fileImage && fileImage.type.match('image.*')){
+      reader.readAsDataURL(fileImage);
+    }
 
-  else  {
-      setImageAttached(false);
+    else  {
     }
   }
+
+
+    else {
+      ctx.clearRect(0,0,canvas.width, canvas.height);
+
+
+    }
+
+    }
+    
   
 
 
 
     
-    
+  
   
   
   const handleSubmit = (e) => {
@@ -87,7 +138,7 @@ const Post = ({ history }) => {
 
     
     const storageRef = ref(storage, "images/" + postTime + "/" + getAuth().currentUser.uid);
-    const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+    const uploadTask = uploadBytesResumable(storageRef, image, metadata);
 
     
 
@@ -96,6 +147,7 @@ uploadTask.on('state_changed',
 (snapshot) => {
   // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
   const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  setProgress(progress);
   console.log('Upload is ' + progress + '% done');
   switch (snapshot.state) {
     case 'paused':
@@ -174,7 +226,7 @@ uploadTask.on('state_changed',
   
   
  if (pending){
-  return <><h3>Loading... (this may take a sec)</h3></>
+  return <><h3>Loading... (this may take 20-30 seconds, depending on the image size)</h3></>
 
  } 
   return (
@@ -183,7 +235,7 @@ uploadTask.on('state_changed',
       <AuthProvider>
       <Navigation /> 
       <div class="container">
-      <div class="row align-items-center my-5">
+      <div class="row align-items-center my-5 mt-3">
           
           <div class="col-md-6 offset-md-3">
 
@@ -231,18 +283,24 @@ uploadTask.on('state_changed',
           
         </div>
 
-        <div class="collapse mt-3" id="collapseExample">
         
-        </div>
-                <div class="mt-4">
-                
-                  <input type="file" id="imgLoader" onChange={(e) => {uploadImage(e.target.files[0])}} />
-                  <button type="submit" class="btn btn-primary" disabled={pending}>Submit</button></div>
+
+      
+        
+        <div>
+      
+      <input type="file" onChange={handleChange} />
+     
+    </div>
                 </div>
-                
-                <div><canvas id='imgCanvas'></canvas></div>
-                
-                
+                <div class="btn-group w-100 " role="group">
+                <button type="submit" class="btn btn-primary mt-2 btn-large btn-block" disabled={pending}>Submit</button>
+                </div> 
+                <small id="room" class="form-text text-muted">
+                    Please make sure to delete your post once your item has sold
+                    </small>
+
+                <div class="w-100 mt-4"><canvas height="400" width="300" id='imgCanvas'></canvas></div>
             </form>
           </div>
         </div>

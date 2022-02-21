@@ -29,7 +29,7 @@ const PostCards = () => {
     useEffect(() => {
 
         // get the first 5 posts
-        const batch = query(ref(db, 'posts/'), limitToLast(50));
+        const batch = query(ref(db, 'posts/'), limitToLast(10));
 
         onValue(batch, (snapshot) => {
             let postsSnapshot = [];
@@ -52,7 +52,7 @@ const PostCards = () => {
     const fetchMorePosts = (key) => {
 
         // get the first 5 posts
-        const batch = query(ref(db, 'posts/'), orderByKey(), limitToLast(50), endBefore(key));
+        const batch = query(ref(db, 'posts/'), orderByKey(), limitToLast(10), endBefore(key));
         onValue(batch, (snapshot) => {
 
             let postsSnapshot = [];
@@ -161,15 +161,14 @@ const PostCards = () => {
                             </div>
 
 
-                        <div class="col-9">
-                        <span class="align-middle">{comment.comment}</span>
+                        <div class="col-auto">
+                        <span class="align-top">{comment.comment}</span>
 
-                            <p class="text-center"></p>
                             
                             
                             </div>
 
-                            <div class="col-1">
+                            <div class="col-1 g-1">
                             {comment.userID == getAuth().currentUser.uid ? <h5><a class="text-danger" onClick={() => {deleteComment(postCardID, comment.time)}}><i class="bi bi-trash "></i></a></h5> : <div></div>}
 
                             </div>
@@ -228,18 +227,37 @@ const PostCards = () => {
 
     const collumnStyle = { gap:"100px"}
     const proPicStyle = {height: "5vw", maxHeight: "40px", minHeight:"40px"}
-
-
+ 
     // CSS Style that makes the images look nice
     const imageClass = { paddingLeft: "0px", marginRight: "px"}
+
+
+      
+        
+      
 
     return (
         <div>
 
+
+
+<div class="input-group mb-2 mt-4">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon1">
+
+    <i class="bi bi-search "></i>
+
+
+    </span>
+  </div>
+  <input type="text" class="form-control mb-3" id="searchID" maxLength="100" name="search" placeholder="Search all posts" aria-describedby="basic-addon1" onChange={(e) => setSearch(e.target.value)} required/></div>
+
+
+
+
+
+
             
-            <div class="input-group" >
-                <input type="text" class="form-control mb-3" id="searchID" maxLength="100" name="search" placeholder="Search all posts" value={search} onChange={(e) => setSearch(e.target.value)} required/>    
-            </div>
         {posts ? posts.map((post, i) =>
             <div>
 
@@ -272,9 +290,13 @@ const PostCards = () => {
 
                         <div class="collapse" aria-expanded="true" id={"a" + post.postTime}>
                             <ul class="list-group list-group-flush">
+                            <a data-bs-toggle="collapse"  href={post.idSelector} style={noStyle} role="button" aria-expanded="true" aria-controls="collapseExample">
                                 <li class="list-group-item">
-                                    <p class="lead">{post.description}</p>
+                                <label for="posttitle" class="form-label"><h6>Description</h6></label>
+
+                                    <p class="lead">{post.description}</p> 
                                 </li>
+                                </a>
                                 <li class="list-group-item">
 
 
@@ -298,12 +320,6 @@ const PostCards = () => {
                     </div>
 
                     
-
-
-
-
-
-
                                 </li>
                             </ul>
                         </div>
@@ -334,15 +350,20 @@ const PostCards = () => {
 
                             <div class="card-body w-100">
                                 <p class="card-text text-muted">{timePrinting(post.postTime, post.date, post.room, post.initials)}</p>
+                                
                                 {post.downloadURL ? imageDec(post.downloadURL) : <div></div>}
                             </div>
                         </a>
-
+                        
                         <div class="collapse" id={"a" + post.postTime}>
                             <ul class="list-group list-group-flush">
+                            <a data-bs-toggle="collapse"  href={post.idSelector} style={noStyle} role="button" aria-expanded="true" aria-controls="collapseExample">
                                 <li class="list-group-item">
-                                    <p class="lead">{post.description}</p>
+                                <label for="posttitle" class="form-label"><h6>Description</h6></label>
+
+                                    <p class="lead">{post.description}</p> 
                                 </li>
+                                </a>
                                 <li class="list-group-item">
 
 
@@ -351,13 +372,17 @@ const PostCards = () => {
 
                         <div class="mb-3">
                         <label for="posttitle" class="form-label"><h6>Comments</h6></label>
+
+                        
                         {commentsDisplay(post.postTime, post.comments)}
                         <div class="input-group mt-3" >
                             <input type="text" class="form-control" id="commentID" maxLength="100" name="comment" placeholder="Comment publicly" value={comment} onChange={(e) => setComment(e.target.value)} required/>
+                            
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit" onClick={() => handleCommentSubmit(post.postTime, getAuth().currentUser.photoURL)}>Post</button>
                             </div>
                         </div>
+                        
                         <small id="price" class="form-text text-muted">
                         {100 - comment.length} characters remaining
                         </small>
@@ -375,6 +400,7 @@ const PostCards = () => {
                                 </li>
                             </ul>
                         </div>
+                    
                     </div>
                     
                      

@@ -2,11 +2,15 @@
 import React, { useState, Redirect, useEffect } from "react";
 import { AuthProvider } from "../Auth";
 import { getAuth, signOut } from "firebase/auth"
-import { getDatabase, query, limitToLast, ref, onValue, set, orderByKey, endBefore } from "firebase/database";
+
+import { getDatabase, query, limitToLast, ref as fireRef, onValue, set, orderByKey, endBefore } from "firebase/database";
 import { withRouter } from "react-router-dom";
 import { getStorage, deleteObject, ref as storRef } from "firebase/storage";
 import { Navigation } from "."
-import { registerVersion } from "@firebase/app";
+import { Modal, Button } from "react-bootstrap";
+import { uploadBytesResumable, getDownloadURL, ref } from "firebase/storage";
+
+
 
 
 const DashboardCards = () => {
@@ -18,6 +22,23 @@ const DashboardCards = () => {
   const [endOfData, setEndOfData] = useState(false);
   const [comment, setComment] = useState("");
   const [search, setSearch] = useState("");
+  const [show, setShow] = useState(false);
+  const [postTitle, setPostTitle] = useState("");
+  const [pending, setPending] = useState(false);
+
+
+  const [price, setPrice] = useState("");
+  const [room, setRoom] = useState("");
+  const [file, setFile] = useState("");
+  const [imageAttached, setImageAttached] = useState(false);
+  
+  const [description, setDescription] = useState("");
+  
+
+  const [image, setImage] = useState(null);
+  const [url, setUrl] = useState("");
+  
+
 
   
   const db = getDatabase(); 
@@ -26,7 +47,7 @@ const DashboardCards = () => {
   useEffect(() => {
 
     // get the first 5 posts
-    const batch = query(ref(db, 'posts/'), limitToLast(10));
+    const batch = query(fireRef(db, 'posts/'), limitToLast(10));
 
     onValue(batch, (snapshot) => {
         let postsSnapshot = [];
@@ -54,7 +75,7 @@ const DashboardCards = () => {
 const fetchMorePosts = (key) => {
 
   // get the first 5 posts
-  const batch = query(ref(db, 'posts/'), orderByKey(), limitToLast(10), endBefore(key));
+  const batch = query(fireRef(db, 'posts/'), orderByKey(), limitToLast(10), endBefore(key));
   onValue(batch, (snapshot) => {
 
       let postsSnapshot = [];
@@ -84,12 +105,200 @@ const fetchMorePosts = (key) => {
 
 
 
+  const handleChange = e => {
+    if (e.target.files[0]) {
+      showOnCanvas(e.target.files[0], true)
+      setImageAttached(true);
+
+      setImage(e.target.files[0]);
+    }
+
+    else {
+      showOnCanvas(e.target.files[0], false)
+      console.log(e.target.files[0]);
+      setImageAttached(false);
+
+    }
+  };
+
+
+
+
+
+  // This takes the uploaded image and displays it to the canvas so the 
+  // user knows what they are uploading
+  function showOnCanvas(fileImage, filePresent) {
+  
+    var canvas = document.getElementById('imgCanvas');
+    var ctx = canvas.getContext('2d');
+    var reader = new FileReader();
+  
+    if(filePresent){
+      
+      
+    reader.onload = function(event) {
+      var img = new Image();
+      img.onload = function() {
+        var hRatio = canvas.width / img.width    ;
+        var vRatio =  canvas.height / img.height  ;
+        var ratio  = Math.min ( hRatio, vRatio );
+        var centerShift_x = ( canvas.width - img.width*ratio ) / 2;
+        var centerShift_y = ( canvas.height - img.height*ratio ) / 2;  
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        ctx.drawImage(img, 0,0, img.width, img.height,0, 0,img.width*ratio, img.height*ratio);
+        
+  
+        
+       
+       
+        return new Promise((resolve) => {
+          canvas.toBlob((blob) => {
+            resolve(
+            console.log(file));
+          });
+        });      
+      }
+  
+      
+      img.src = event.target.result;
+    }
+  
+      if(fileImage && fileImage.type.match('image.*')){
+        reader.readAsDataURL(fileImage);
+      }
+  
+      else  {
+      }
+    }
+  
+  
+      else {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+  
+  
+      }
+  
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      const saveChanges = (givenPost) => {
+    
+    
+  
+        const metadata = {
+          contentType: 'image/jpg'
+        };
+  
+        // Create a root reference
+        const db = getDatabase();
+  
+        const storage = getStorage();
+  
+  
+      
+      const storageRef = ref(storage, "images/" + givenPost.postTime + "/" + getAuth().currentUser.uid);
+      const uploadTask = uploadBytesResumable(storageRef, image, metadata);
+  
+      
+  
+      // Listen for state changes, errors, and completion of the upload.
+  uploadTask.on('state_changed',
+  (snapshot) => {
+    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log('Upload is ' + progress + '% done');
+    switch (snapshot.state) {
+      case 'paused':
+        console.log('Upload is paused');
+        break;
+      case 'running':
+        console.log('Upload is running');
+        break;
+    }
+  }, 
+  (error) => {
+    // A full list of error codes is available at
+    // https://firebase.google.com/docs/storage/web/handle-errors
+    switch (error.code) {
+      case 'storage/unauthorized':
+        // User doesn't have permission to access the object
+        break;
+      case 'storage/canceled':
+        // User canceled the upload
+        break;
+  
+      // ...
+  
+      case 'storage/unknown':
+        // Unknown error occurred, inspect error.serverResponse
+        break;
+    }
+  }, 
+  () => {
+    // Upload completed successfully, now we can get the download URL
+    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      console.log('File available at', downloadURL);
+      var shortDesc = String(description).substr(0, 47);
+  
+      if(imageAttached == false) {
+        downloadURL = "";
+      }
+    console.log(givenPost.postTime);
+      set(fireRef(db, 'posts/' + givenPost.postTime), {
+        postTitle: String(postTitle),
+        email: givenPost.email,
+        price: String(price),
+        description: String(description),
+        userid: givenPost.userid,
+        room: String(room),
+        postTime: String(givenPost.postTime),
+        date: givenPost.date,
+        downloadURL: downloadURL,
+        shortDesc: shortDesc,
+        idSelector: givenPost.idSelector,
+        initials: givenPost.initials
+      }).then(() => {
+        
+        
+      })
+      .catch((error) => {
+      alert(error);
+    });
+  
+    });
+  }
+  );
+  
+          
+     
+    };
+
+    
+
+
+
+
+
+
   const handleCommentSubmit = (postID, URL) => {
 
     const commentTime = Date.now();
 
     if(comment){
-    set(ref(db, 'posts/' + postID + "/comments/" + commentTime), {
+    set(fireRef(db, 'posts/' + postID + "/comments/" + commentTime), {
       time: commentTime,
       userID: getAuth().currentUser.uid,
       userProPicURL: URL,
@@ -122,6 +331,87 @@ const fetchMorePosts = (key) => {
               <h5>You've reached the end!</h5></div>
           )
       }
+  }
+
+  function modalEditDisplay(givenPostCard) {
+
+
+
+
+    return (
+
+        <div>           
+             {console.log(givenPostCard.postTime)}
+        
+        <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+            <Modal.Title>Edit Post</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+
+                                    
+                <form >
+                
+                    <div class="mb-3">
+                        <label for="posttitle" class="form-label"><h5>Post Title</h5></label>
+                        <input type="text" class="form-control" id="postTitleID" maxLength="30"  name="postTitle" value={postTitle} onChange={(e) => setPostTitle(e.target.value)} required />
+                        <small id="price" class="form-text text-muted">
+                        {30 - postTitle.length} characters remaining
+                        </small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="price" class="form-label"><h5>Price</h5></label>
+                        <input type="number" min="1" step="1" class="form-control" max="9999" id="price"  step="1" value={price} placeHolder={givenPostCard.price} onChange={(e) => setPrice(e.target.value)} required/>
+                        <small id="price" class="form-text text-muted">
+                        The price must be a whole number
+                        </small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="room" class="form-label"><h5>Room Number</h5></label>
+                        <input maxLength="4" pattern="[0-9]{4}" type="number" min="1001" max="8499" step="1" class="form-control" id="room" step="1" placeHolder={givenPostCard.room} value={room} onChange={(e) => setRoom(e.target.value)} required/>
+                        <small id="room" class="form-text text-muted">
+                        Enter your four-digit Bancroft room number
+                        </small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postingDescription" class="form-label"><h5>Description</h5></label>
+                        <textarea class="form-control" maxLength="150" id="postingDescription" rows="3" placeHolder={givenPostCard.description}  value={description} onChange={(e) => setDescription(e.target.value)} required></textarea>
+                        <small id="price" class="form-text text-muted">
+                        {150 - description.length} characters remaining
+                        </small>
+                        <div class="form-check mb-3">
+            
+                            <div class="invalid-feedback">
+                            You must agree before submitting.
+                            </div>
+                        </div>
+        
+                        <div>
+    
+                            <input type="file" onChange={handleChange} />
+    
+                        </div>
+                    </div>
+                
+                
+
+                    <div class="w-100 mt-4"><canvas height="400" width="300" id='imgCanvas'></canvas></div>
+                </form>
+
+            </Modal.Body>
+            <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+                Close
+            </Button>
+            <Button variant="primary" onClick={() => {console.log(givenPostCard.postTime)}}>
+                Save Changes
+            </Button>
+            </Modal.Footer>
+        </Modal>
+        </div>
+
+    )
   }
 
 
@@ -174,18 +464,32 @@ const fetchMorePosts = (key) => {
       const storageVar = getStorage()
       const storageRef = storRef(storageVar, 'images/' + postTime + "/" + getAuth().currentUser.uid);
       deleteObject(storageRef);
-      set(ref(db, "posts/" + postTime), {
+      set(fireRef(db, "posts/" + postTime), {
         
       })      
       }
 
+      const handleClose = () => setShow(false);
+      const handleShow = () => setShow(true);
+
       const deleteComment = (postCardID, commentID) => {
         const db = getDatabase();
         
-        set(ref(db, "posts/" + postCardID + "/comments/" + commentID), {
+        set(fireRef(db, "posts/" + postCardID + "/comments/" + commentID), {
           
         })      
         }
+
+
+        function imageDec(url) {
+            if (url != "") {
+                return <div class="" style={imageClass}><img src={url} class="img-fluid w-100" /> </div>
+            }
+            else {
+                return <></>
+            }
+        }
+    
       
 
     // This function takes the initial post time and calculates a realtime 
@@ -235,10 +539,25 @@ const fetchMorePosts = (key) => {
   return (
     <div>
 
+
+
+<div class="input-group mb-2 mt-4">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon1">
+
+    <i class="bi bi-search "></i>
+
+
+    </span>
+  </div>
+  <input type="text" class="form-control mb-3" id="searchID" maxLength="100" name="search" placeholder="Search all posts" aria-describedby="basic-addon1" onChange={(e) => setSearch(e.target.value)} required/></div>
+
+
+
+
+
+
             
-            <div class="input-group" >
-                <input type="text" class="form-control mb-3" id="searchID" maxLength="100" name="search" placeholder="Search your posts" value={search} onChange={(e) => setSearch(e.target.value)} required/>    
-            </div>
         {posts ? posts.map((post, i) =>
             <div>
 
@@ -248,34 +567,34 @@ const fetchMorePosts = (key) => {
 
                     <div class="card mb-4" key={i}>
                         <a data-bs-toggle="collapse" href={post.idSelector} style={noStyle} role="button" aria-expanded="false" aria-controls="collapseExample">
-
-
                         <div class="card-header">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-auto me-auto">
-                                        <h3>{post.postTitle}</h3>
-                                    </div>
-                                    <div class="col-auto">
-                                    
-                                        <h3 class=" text-success">${post.price}</h3>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-auto me-auto">
+                                            <h3>{post.postTitle}</h3>
+                                        </div>
+                                        <div class="col-auto">
                                         
-                                    </div>
+                                            <h3 class=" text-success">${post.price}</h3>
+                                            
+                                        </div>
 
-                                    <div class="col-1">
+                                        <div class="col-1">
+                                            
+                                            <h3 class="text-danger">
+                                                <a onClick={() => {deletePost(post.postTime)}}><i class="bi bi-trash "></i></a></h3>
+                                        </div>
+
                                         
-                                    <h3 class="text-danger">
-                                        <a onClick={() => {deletePost(post.postTime)}}><i class="bi bi-trash "></i></a></h3>
+
+
+
+                                        
+
+
                                     </div>
-
-
                                 </div>
                             </div>
-                            </div>
-
-
-
-
 
                             <div class="card-body w-100">
                                 <p class="card-text text-muted">{timePrinting(post.postTime, post.date, post.room, post.initials)}</p>
@@ -283,11 +602,15 @@ const fetchMorePosts = (key) => {
                             </div>
                         </a>
 
-                        <div class="collapse" aria-expanded="false" id={"a" + post.postTime}>
+                        <div class="collapse" aria-expanded="true" id={"a" + post.postTime}>
                             <ul class="list-group list-group-flush">
+                            <a data-bs-toggle="collapse"  href={post.idSelector} style={noStyle} role="button" aria-expanded="true" aria-controls="collapseExample">
                                 <li class="list-group-item">
-                                    <p class="lead">{post.description}</p>
+                                <label for="posttitle" class="form-label"><h6>Description</h6></label>
+
+                                    <p class="lead">{post.description}</p> 
                                 </li>
+                                </a>
                                 <li class="list-group-item">
 
 
@@ -297,7 +620,7 @@ const fetchMorePosts = (key) => {
                         <div class="mb-3">
                         <label for="posttitle" class="form-label"><h6>Comments</h6></label>
                         {commentsDisplay(post.postTime, post.comments)}
-                        <div class="input-group" >
+                        <div class="input-group mt-3" >
                             <input type="text" class="form-control" id="commentID" maxLength="100" name="comment" placeholder="Comment publicly" value={comment} onChange={(e) => setComment(e.target.value)} required/>
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit" onClick={() => handleCommentSubmit(post.postTime, getAuth().currentUser.photoURL)}>Post</button>
@@ -311,12 +634,6 @@ const fetchMorePosts = (key) => {
                     </div>
 
                     
-
-
-
-
-
-
                                 </li>
                             </ul>
                         </div>
@@ -331,39 +648,51 @@ const fetchMorePosts = (key) => {
                     <div class="card mb-4" key={i}>
                         <a data-bs-toggle="collapse" href={post.idSelector} style={noStyle} role="button" aria-expanded="true" aria-controls="collapseExample">
                         <div class="card-header">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-auto me-auto">
-                                        <h3>{post.postTitle}</h3>
-                                    </div>
-                                    <div class="col-auto">
-                                    
-                                        <h3 class=" text-success">${post.price}</h3>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-auto me-auto">
+                                            <h3>{post.postTitle}</h3>
+                                        </div>
+                                        <div class="col-auto">
                                         
-                                    </div>
+                                            <h3 class=" text-success">${post.price}</h3>
+                                            
+                                        </div>
 
-                                    <div class="col-1">
+                                        <div class="col-1">
+                                            
+                                            <h3 class="text-danger">
+                                                <a onClick={() => {deletePost(post.postTime)}}><i class="bi bi-trash "></i></a></h3>
+                                        </div>
+
+                                       
+
+
+
+
                                         
-                                    <h3 class="text-danger">
-                                        <a onClick={() => {deletePost(post.postTime)}}><i class="bi bi-trash "></i></a></h3>
+
+
                                     </div>
-
-
                                 </div>
-                            </div>
                             </div>
 
                             <div class="card-body w-100">
                                 <p class="card-text text-muted">{timePrinting(post.postTime, post.date, post.room, post.initials)}</p>
+                                
                                 {post.downloadURL ? imageDec(post.downloadURL) : <div></div>}
                             </div>
                         </a>
-
+                        
                         <div class="collapse" id={"a" + post.postTime}>
                             <ul class="list-group list-group-flush">
+                            <a data-bs-toggle="collapse"  href={post.idSelector} style={noStyle} role="button" aria-expanded="true" aria-controls="collapseExample">
                                 <li class="list-group-item">
-                                    <p class="lead">{post.description}</p>
+                                <label for="posttitle" class="form-label"><h6>Description</h6></label>
+
+                                    <p class="lead">{post.description}</p> 
                                 </li>
+                                </a>
                                 <li class="list-group-item">
 
 
@@ -372,13 +701,17 @@ const fetchMorePosts = (key) => {
 
                         <div class="mb-3">
                         <label for="posttitle" class="form-label"><h6>Comments</h6></label>
+
+                        
                         {commentsDisplay(post.postTime, post.comments)}
-                        <div class="input-group" >
-                            <input type="text" class="form-control" id="commentID" maxLength="100" name="comment" placeholder="Comment publicaly" value={comment} onChange={(e) => setComment(e.target.value)} required/>
+                        <div class="input-group mt-3" >
+                            <input type="text" class="form-control" id="commentID" maxLength="100" name="comment" placeholder="Comment publicly" value={comment} onChange={(e) => setComment(e.target.value)} required/>
+                            
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit" onClick={() => handleCommentSubmit(post.postTime, getAuth().currentUser.photoURL)}>Post</button>
                             </div>
                         </div>
+                        
                         <small id="price" class="form-text text-muted">
                         {100 - comment.length} characters remaining
                         </small>
@@ -396,6 +729,7 @@ const fetchMorePosts = (key) => {
                                 </li>
                             </ul>
                         </div>
+                    
                     </div>
                     
                      
@@ -412,6 +746,48 @@ const fetchMorePosts = (key) => {
 
 
 /*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     
     <div className="home">
@@ -484,7 +860,7 @@ const fetchMorePosts = (key) => {
   );
 }*/
 
-export default DashboardCards;
+export default (DashboardCards);
 
 
 /*

@@ -14,12 +14,13 @@ function TermsOfUse() {
           
           <div class="col-md-6 offset-md-3">
             <h1>Terms of Use</h1>
-            <p>Basically, please don't do anything that will get me in trouble for making this website, or in someway hurt others using this website.</p>
+            <p>Basically, don't do anything that will get us in trouble for making this website, or in someway hurt others using this website.</p>
             <p>
             WELCOME TO MIDTRADE. We (Midtrade) hope you find it useful. By accessing or otherwise interacting with our servers, services, websites, mobile app ("App"), or any associated content/postings (together, "Midtrade"), 
             you agree to these Terms of Use ("TOU") (last updated February 19th, 2022). You acknowledge and agree Midtrade is a private site. If you are accessing or using Midtrade on behalf of a business, you 
             represent and warrant to Midtrade that you have authority to accept the TOU on behalf of that business and that that business agrees to the TOU. If you do not agree to the TOU, you are not authorized to use Midtrade or download the App. 
-            We may modify the TOU at any time in our sole discretion. You are responsible for periodically checking for changes and are bound by them if you continue to use Midtrade.
+            We may modify the TOU at any time in our sole discretion. You are responsible for periodically checking for changes and are bound by them if you continue to use Midtrade. Our <a href="/prohibited">prohibited list 
+            (midtrade.us/prohibited),</a> and all other policies, site rules, and agreements referenced below or on Midtrade, are fully incorporated into this TOU, and you agree to them as well.
             </p>
 
             <p>
