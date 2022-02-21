@@ -38,7 +38,7 @@ function Home(props) {
                   
 
                     <div class="card-body w-100">
-                        <p class="lead">This is the beta. More features will be added. You are invitied to <a target="_blank" href="https://forms.gle/jjDBXjmKBg1KMKRz5">provide feedback here.</a></p>
+                        <p class="lead">This is the beta. More features will be added. You are invited to <a target="_blank" href="https://forms.gle/jjDBXjmKBg1KMKRz5">provide feedback here.</a></p>
                         <p class="lead"><a href="/plannedFeatures">Click here for a list of planned/upcoming features</a></p>
                         
                         
