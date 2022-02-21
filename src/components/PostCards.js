@@ -150,27 +150,16 @@ const PostCards = () => {
                 <div>
                     {posts ? postCommentsArray.map((comment) => <div class="">
                         <div class="row mb-3">
-                            <div class="col-1" style={collumnStyle}>
-                            
-
-                            
-                            <span class="align-middle"><img class="rounded-circle img-responsive"  style={proPicStyle} src={comment.userProPicURL} /></span>
-                            
-
-                            
+                            <div class="col-1 m-1" style={collumnStyle}>
+                                <span class="align-middle"><img class="rounded-circle img-responsive"  style={proPicStyle} src={comment.userProPicURL} /></span>
                             </div>
-
-
-                            <div class="col-9">
+                            <div class="col-9 m-1">
                                 <span class="align-middle">{comment.comment}</span>
                                     <p class="text-center"></p>
                             </div>
-
-                            <div class="col-1">
+                            <div class="col-1 m-1">
                             {comment.userID == getAuth().currentUser.uid ? <h5><a class="text-danger" onClick={() => {deleteComment(postCardID, comment.time)}}><i class="bi bi-trash "></i></a></h5> : <div></div>}
                             </div>
-
-                            
                             </div>
                     </div>) : <div></div>}
                     
