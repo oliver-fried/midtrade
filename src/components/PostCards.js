@@ -161,17 +161,13 @@ const PostCards = () => {
                             </div>
 
 
-                        <div class="col-9">
-                        <span class="align-middle">{comment.comment}</span>
-
-                            <p class="text-center"></p>
-                            
-                            
+                            <div class="col-9">
+                                <span class="align-middle">{comment.comment}</span>
+                                    <p class="text-center"></p>
                             </div>
 
                             <div class="col-1">
                             {comment.userID == getAuth().currentUser.uid ? <h5><a class="text-danger" onClick={() => {deleteComment(postCardID, comment.time)}}><i class="bi bi-trash "></i></a></h5> : <div></div>}
-
                             </div>
 
                             
