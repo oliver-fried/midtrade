@@ -29,7 +29,7 @@ const PostCards = () => {
     useEffect(() => {
 
         // get the first 5 posts
-        const batch = query(ref(db, 'posts/'), limitToLast(10));
+        const batch = query(ref(db, 'posts/'), limitToLast(20));
 
         onValue(batch, (snapshot) => {
             let postsSnapshot = [];
@@ -52,7 +52,7 @@ const PostCards = () => {
     const fetchMorePosts = (key) => {
 
         // get the first 5 posts
-        const batch = query(ref(db, 'posts/'), orderByKey(), limitToLast(10), endBefore(key));
+        const batch = query(ref(db, 'posts/'), orderByKey(), limitToLast(20), endBefore(key));
         onValue(batch, (snapshot) => {
 
             let postsSnapshot = [];
@@ -150,30 +150,16 @@ const PostCards = () => {
                 <div>
                     {posts ? postCommentsArray.map((comment) => <div class="">
                         <div class="row mb-3">
-                            <div class="col-1" style={collumnStyle}>
-                            
-
-                            
-                            <span class="align-middle"><img class="rounded-circle img-responsive"  style={proPicStyle} src={comment.userProPicURL} /></span>
-                            
-
-                            
+                            <div class="col-1 m-2" style={collumnStyle}>
+                                <span class="align-middle"><img class="rounded-circle img-responsive"  style={proPicStyle} src={comment.userProPicURL} /></span>
                             </div>
-
-
-                        <div class="col-auto">
-                        <span class="align-top">{comment.comment}</span>
-
-                            
-                            
+                            <div class="col-9 m-1">
+                                <span class="align-middle">{comment.comment}</span>
+                                    <p class="text-center"></p>
                             </div>
-
-                            <div class="col-1 g-1">
+                            <div class="col-1 m-1">
                             {comment.userID == getAuth().currentUser.uid ? <h5><a class="text-danger" onClick={() => {deleteComment(postCardID, comment.time)}}><i class="bi bi-trash "></i></a></h5> : <div></div>}
-
                             </div>
-
-                            
                             </div>
                     </div>) : <div></div>}
                     
@@ -181,6 +167,7 @@ const PostCards = () => {
             );
         }
     }
+
 
     // this function handles getting the post photo
     function imageDec(url) {

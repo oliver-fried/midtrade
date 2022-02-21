@@ -31,7 +31,6 @@ function PlannedFeatures(props) {
           
           <h1>Planned Features</h1>
 
-          <h1 class="mt-4 lead">- Increased image resolution</h1>
           <h1 class=" lead">- Support for multiple images</h1>
           <h1 class="lead">- Ability to request to buy items</h1>
           <h1 class="lead">- Description tags to posts (functioning as a hashtag)</h1>
