@@ -17,10 +17,7 @@ function About() {
 
   return (
     <div>
-      <Navigation />
-      <div class="row" style={fH}>
           
-          <div class="mt-3 col-md-6 offset-md-3">
 
             <h1 class=" font-weight-light">About</h1>
 
@@ -42,10 +39,10 @@ function About() {
             
 
           </div>
-        </div>
+       
       
-      <Footer />
-    </div>
+      
+    
   );
 }
 

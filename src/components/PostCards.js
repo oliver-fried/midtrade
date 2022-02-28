@@ -8,7 +8,6 @@
 
 import React, { useState, Redirect, useEffect } from "react";
 import { getDatabase, query, limitToLast, ref, onValue, startAfter, orderByKey, startAt, limitToFirst, limit, endAt, endBefore } from "firebase/database";
-import PostComments from "./PostComments";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { getAuth, signOut } from "firebase/auth";
 import { ref as fireRef, set } from "firebase/database";
@@ -16,6 +15,7 @@ import { ref as fireRef, set } from "firebase/database";
 
 
 const PostCards = () => {
+    console.log(window.location.pathname);
 
     const [posts, setPosts] = useState([]);
     const [lastKey, setLastKey] = useState("");
@@ -37,7 +37,40 @@ const PostCards = () => {
             var isFirstPost = true;
             const data = snapshot.val();
             for (let id in data) {
-                postsSnapshot.push(data[id]);
+
+                if(window.location.pathname == "/"){
+                    postsSnapshot.push(data[id]);
+
+                }
+
+                else if(window.location.pathname == "/books"){
+
+                    if(data[id].category == "1" ){
+                        postsSnapshot.push(data[id]);
+                      }
+                }
+                
+                else if(window.location.pathname == "/electronics"){
+
+                    if(data[id].category == "2" ){
+                        postsSnapshot.push(data[id]);
+                      }
+                }
+
+                else if(window.location.pathname == "/apparel"){
+
+                    if(data[id].category == "3" ){
+                        postsSnapshot.push(data[id]);
+                      }
+                }
+
+                else if(window.location.pathname == "/room-items"){
+
+                    if(data[id].category == "4" ){
+                        postsSnapshot.push(data[id]);
+                      }
+                }
+                
                 if(isFirstPost) {
                     isFirstPost = false;
                     lastKeySnapshot = id;
@@ -65,7 +98,38 @@ const PostCards = () => {
             }
 
             for (let id in data) {
-                postsSnapshot.push(data[id]);
+                if(window.location.pathname == "/"){
+                    postsSnapshot.push(data[id]);
+
+                }
+
+                else if(window.location.pathname == "/books"){
+
+                    if(data[id].category == "1" ){
+                        postsSnapshot.push(data[id]);
+                      }
+                }
+                
+                else if(window.location.pathname == "/electronics"){
+
+                    if(data[id].category == "2" ){
+                        postsSnapshot.push(data[id]);
+                      }
+                }
+
+                else if(window.location.pathname == "/apparel"){
+
+                    if(data[id].category == "3" ){
+                        postsSnapshot.push(data[id]);
+                      }
+                }
+
+                else if(window.location.pathname == "/room-items"){
+
+                    if(data[id].category == "4" ){
+                        postsSnapshot.push(data[id]);
+                      }
+                }
 
                 if(isFirstPost) {
                 isFirstPost = false;
@@ -237,7 +301,19 @@ const PostCards = () => {
         <div>
 
 
+<div class="card mb-3">
+                  
 
+                   
+                
+
+<div class="card-body w-100">
+                        <p class="lead">This is the beta. More features will be added. You are invitied to <a target="_blank" href="https://forms.gle/jjDBXjmKBg1KMKRz5">provide feedback here.</a></p>
+                        <p class="lead"><a href="/plannedFeatures">Click here for a list of planned/upcoming features</a></p>
+                        
+                        
+                    </div>
+                    </div>
 <div class="input-group mb-2 mt-4">
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon1">

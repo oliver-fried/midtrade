@@ -4,15 +4,15 @@ import { Footer } from "."
 
 
 function TermsOfUse() {
+
   return (
     
-    <div className="about">
+    
      
-      <Navigation /> 
-      <div class="container">
-      <div class="row align-items-center my-4">
+      
+      
           
-          <div class="col-md-6 offset-md-3">
+          <div>
             <h1>Terms of Use</h1>
             <p>Basically, don't do anything that will get us in trouble for making this website, or in someway hurt others using this website.</p>
             <p>
@@ -64,12 +64,8 @@ function TermsOfUse() {
                           The English version of the TOU controls over any translations. </p>
 
                           
-          </div>
-        </div>
-      </div>
-
-      
-    </div>
+                          </div>
+        
   );
 }
 

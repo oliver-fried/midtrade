@@ -5,6 +5,8 @@ import { getAuth, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
 import { Button, Container } from "react-bootstrap";
 
 const Login = ({ history }) => {
+  console.log("test")
+
 
     const [ currentUser, setCurrentUser ]  = useState();
 
@@ -38,11 +40,13 @@ const Login = ({ history }) => {
   }
   const titleTextStyle = {fontSize:"10vw"}
   const backgroundStyle = {backgroundImage:"linear-gradient(135deg, #7accff,#001fcf)"}
+
   
   return (
 
       
       <div class="container mh-100 vh-100 mw-100"  style={backgroundStyle}>
+        
         <div class="row align-items-center h-100">
     <div class="mx-auto text-center">
         

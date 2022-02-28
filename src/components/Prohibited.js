@@ -8,11 +8,7 @@ function Prohibited() {
     
     <div className="about">
      
-      <Navigation /> 
-      <div class="container">
-      <div class="row align-items-center my-4">
-          
-          <div class="col-md-6 offset-md-3">
+      
             <h1>Prohibited Items</h1>
             <p>Users must comply with all applicable laws, the Midtrade terms of use, and all posted site rules.</p>
             <p>Here is a partial list of goods, services, and content prohibited on Midtrade:</p>
@@ -44,11 +40,7 @@ function Prohibited() {
 
                           
           </div>
-        </div>
-      </div>
-
-      
-    </div>
+        
   );
 }
 

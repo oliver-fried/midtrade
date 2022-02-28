@@ -41,16 +41,6 @@ function Dashboard(props) {
     <div>
     
     
-    <div className="home">
-      <Navigation />
-      <div class="container">
-        <div class="row align-items-center my-3 mt-3">
-        <div class="col-md-6 offset-md-3 text-center">
-            </div>    
-    
-            
-          
-          <div class="col-md-6 offset-md-3">
           <h1>Dashboard</h1>
 
           <button class='btn btn-primary btn-block w-100 mb-4 mt-3' onClick={handleSignOut}>Sign out</button>
@@ -64,10 +54,8 @@ function Dashboard(props) {
             <DashboardCards />
 
           </div>
-        </div>
-      </div>
-    </div>
-    </div>
+    
+    
     
     
   );

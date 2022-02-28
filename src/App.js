@@ -10,31 +10,21 @@ function App() {
   return (
     <div id='root'>
       <AuthProvider>
+
       <Router>
-        
         <Switch>
-          <PrivateRoute exact path="/dashboard" component={() => <Dashboard />} />
-          <PrivateRoute exact path="/home" component={() => <Home />} />
-          <PrivateRoute exact path="/" component={() => <Home />} />
-          <PrivateRoute exact path="/buying" component={() => <Buying />} />
-          <PrivateRoute exact path="/post" component={() => <Post />} />
-          <PrivateRoute exact path="/about" component={() => <About />} />
-          <PrivateRoute exact path="/request" component={() => <Request />} />
-          <PrivateRoute exact path="/plannedFeatures" component={() => <PlannedFeatures />} />
-          <PrivateRoute exact path="/terms-of-use" component={() => <TermsOfUse />} />
-          <PrivateRoute exact path="/prohibited" component={() => <Prohibited />} />
+                    
 
           <Route path="/login" component={() => <Login />} />
-          <PrivateRoute exact path="/dashboard-requests" component={() => <DashboardRequests />} />
+          <PrivateRoute path="/" component={() => <Home />} />
 
-          
-          
-          
+    
         </Switch>
 
       </Router>
-      
-      </AuthProvider>
+
+
+    </AuthProvider>
     </div>
   );
 }

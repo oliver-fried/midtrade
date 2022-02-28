@@ -26,6 +26,7 @@ const Post = ({ history }) => {
   const [progress, setProgress] = useState(0);
   const [image, setImage] = useState(null);
   const [url, setUrl] = useState("");
+  const [category, setCategory] = useState(0);
 
 
 
@@ -198,10 +199,11 @@ uploadTask.on('state_changed',
       downloadURL: downloadURL,
       shortDesc: shortDesc,
       idSelector: "#a" + String(postTime),
-      initials: getAuth().currentUser.displayName.charAt(0) + getAuth().currentUser.displayName.split(" ")[1].charAt(0) + " '" + getAuth().currentUser.email.charAt(1) + getAuth().currentUser.email.charAt(2)
+      initials: getAuth().currentUser.displayName.charAt(0) + getAuth().currentUser.displayName.split(" ")[1].charAt(0) + " '" + getAuth().currentUser.email.charAt(1) + getAuth().currentUser.email.charAt(2),
+      category: category
     }).then(() => {
       
-      history.push("/home");
+      history.push("/");
       setPending(false);
     })
     .catch((error) => {
@@ -231,13 +233,7 @@ uploadTask.on('state_changed',
  } 
   return (
     
-    <div className="about">
-      <AuthProvider>
-      <Navigation /> 
-      <div class="container">
-      <div class="row align-items-center my-5 mt-3">
           
-          <div class="col-md-6 offset-md-3">
 
             <form onSubmit={handleSubmit}>
             
@@ -248,6 +244,21 @@ uploadTask.on('state_changed',
                     {30 - postTitle.length} characters remaining
                     </small>
                 </div>
+
+                
+
+               
+                <select required class="form-select form-select-md mb-3"  onChange={(e) => setCategory(e.target.value)} id="inputGroupSelect01" >
+                  <option selected>Category...</option>
+                  <option value="1">Books</option>
+                  <option value="2">Electronics</option>
+                  <option value="3">Apparel</option>
+                  <option value="3">Room Items</option>
+                  <option value="3">Other</option>
+
+
+                </select>
+              
                 
                 <div class="mb-3">
                     <label for="price" class="form-label"><h5>Price</h5></label>
@@ -303,11 +314,9 @@ uploadTask.on('state_changed',
 
                 <div class="w-100 mt-4"><canvas height="400" width="300" id='imgCanvas'></canvas></div>
             </form>
-          </div>
-        </div>
-      </div>
-      </AuthProvider>
-    </div>
+          
+       
+     
   );
  }
 
