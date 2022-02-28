@@ -22,13 +22,8 @@ function PlannedFeatures(props) {
 
   return (
     
-    <div className="plannedFeatures">
-      <Navigation />
-      <div class="container">
-        <div class="row align-items-center my-3">
-          
-          <div class="col-md-6 offset-md-3 text-center" > 
-          
+    
+          <div>
           <h1>Planned Features</h1>
 
           <h1 class=" lead">- Support for multiple images</h1>
@@ -38,16 +33,14 @@ function PlannedFeatures(props) {
           <h1 class=" lead">- Ability to edit posted posts</h1>
 
 
-          
-          <button class="btn btn-primary mt-4" onClick={() => window.open("https://forms.gle/55c7JpVuKXB7QPj36", '_blank')}>     Vote     </button>
-          
-          
-        
+          <div class="btn-group w-100 " role="group">
+          <button class="btn btn-block btn-primary mt-4" onClick={() => window.open("https://forms.gle/55c7JpVuKXB7QPj36", '_blank')}>     Vote     </button>
           </div>
+          </div>
+        
+          
 
-        </div>
-      </div>
-    </div>
+       
   );
 }
 

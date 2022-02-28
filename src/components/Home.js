@@ -187,6 +187,9 @@ function Home(props) {
     <PrivateRoute exact path="/electronics" component={() => <PostCards />} /> 
     <PrivateRoute exact path="/apparel" component={() => <PostCards />} /> 
     <PrivateRoute exact path="/room-items" component={() => <PostCards />} /> 
+    <PrivateRoute exact path="/plannedFeatures" component={() => <PlannedFeatures />} /> 
+
+
 
 
 
@@ -327,13 +330,9 @@ function Home(props) {
     <PrivateRoute exact path="/electronics" component={() => <PostCards />} /> 
     <PrivateRoute exact path="/apparel" component={() => <PostCards />} /> 
     <PrivateRoute exact path="/room-items" component={() => <PostCards />} /> 
+    <PrivateRoute exact path="/plannedFeatures" component={() => <PlannedFeatures />} /> 
 
 
-
-           
-
-    
-    
     
   </Switch>
 

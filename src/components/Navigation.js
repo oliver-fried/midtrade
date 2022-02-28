@@ -10,7 +10,7 @@ function Navigation(props) {
 
   /* for path highligting:
   class={`nav-item  ${
-                  props.location.pathname === "/post" ? "active" : ""
+                  window.location.pathname === "/post" ? "active" : ""
                 }`}
   */
 
