@@ -20,7 +20,7 @@ import { createPortal } from "react-dom";
 import PostCard from "./PostCard";
 
 
-const PostCards = () => {
+const BookCards = () => {
 
     const [posts, setPosts] = useState([]);
     const [lastKey, setLastKey] = useState("");
@@ -36,7 +36,7 @@ const PostCards = () => {
     useEffect(() => {
 
         // get the first 5 posts
-        const batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(20));
+        const batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(20), where("category", "==", "1"));
 
         const dbSnapshot = onSnapshot(batch, (querySnapshot) => {
             const postsSnapshot = [];
@@ -47,43 +47,7 @@ const PostCards = () => {
                 const batchComments = query(collection(db, "posts/" + doc.data().postTime + "/comments/"));
 
 
-
-                if (window.location.pathname == "/") {
-
-                    postsSnapshot.push(doc.data());
-
-                }
-
-                else if (window.location.pathname == "/books") {
-
-                    if (doc.data().category == "1") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/electronics") {
-
-                    if (doc.data().category == "2") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/apparel") {
-
-                    if (doc.data().category == "3") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/room-items") {
-
-                    if (doc.data().category == "4") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-
-
+                postsSnapshot.push(doc.data());
 
 
                 lastKeySnapshot = doc.data().postTime;
@@ -110,7 +74,7 @@ const PostCards = () => {
 
         setEndOfData(false)
 
-        const batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(20), where("priceNum", "!=", 0));
+        const batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(20), where("priceNum", "!=", 0), where("category", "==", "1"));
 
         const dbSnapshot = onSnapshot(batch, (querySnapshot) => {
             const postsSnapshot = [];
@@ -122,40 +86,7 @@ const PostCards = () => {
 
 
 
-                if (window.location.pathname == "/") {
-
-                    postsSnapshot.push(doc.data());
-
-                }
-
-                else if (window.location.pathname == "/books") {
-
-                    if (doc.data().category == "1") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/electronics") {
-
-                    if (doc.data().category == "2") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/apparel") {
-
-                    if (doc.data().category == "3") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/room-items") {
-
-                    if (doc.data().category == "4") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
+                postsSnapshot.push(doc.data());
 
 
 
@@ -177,7 +108,7 @@ const PostCards = () => {
     const searchTime = () => {
         setEndOfData(false)
 
-        const batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(20));
+        const batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(20), where("category", "==", "1"));
 
         const dbSnapshot = onSnapshot(batch, (querySnapshot) => {
             const postsSnapshot = [];
@@ -187,44 +118,7 @@ const PostCards = () => {
 
                 const batchComments = query(collection(db, "posts/" + doc.data().postTime + "/comments/"));
 
-
-
-                if (window.location.pathname == "/") {
-
-                    postsSnapshot.push(doc.data());
-
-                }
-
-                else if (window.location.pathname == "/books") {
-
-                    if (doc.data().category == "1") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/electronics") {
-
-                    if (doc.data().category == "2") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/apparel") {
-
-                    if (doc.data().category == "3") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/room-items") {
-
-                    if (doc.data().category == "4") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-
-
+                postsSnapshot.push(doc.data());
 
 
                 lastKeySnapshot = doc.data().postTime;
@@ -245,10 +139,10 @@ const PostCards = () => {
     const handleSearch = (e) => {
         setEndOfData(false)
 
-        var batch = query(collection(db, "posts/"), orderBy("postTime"), limit(20), where("postDescCombined", "array-contains", search));
+        var batch = query(collection(db, "posts/"), orderBy("postTime"), limit(20), where("postDescCombined", "array-contains", search), where("category", "==", "1"));
 
         if(!searchByTime) {
-            batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(20), where("postDescCombined", "array-contains", search), where("priceNum", "!=", 0));
+            batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(20), where("postDescCombined", "array-contains", search), where("priceNum", "!=", 0), where("category", "==", "1"));
         }
 
 
@@ -262,40 +156,8 @@ const PostCards = () => {
 
 
 
-                if (window.location.pathname == "/") {
-
-                    postsSnapshot.push(doc.data());
-
-                }
-
-                else if (window.location.pathname == "/books") {
-
-                    if (doc.data().category == "1") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/electronics") {
-
-                    if (doc.data().category == "2") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/apparel") {
-
-                    if (doc.data().category == "3") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/room-items") {
-
-                    if (doc.data().category == "4") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
+               
+                postsSnapshot.push(doc.data());
 
 
 
@@ -320,10 +182,10 @@ const PostCards = () => {
 
     const fetchMorePosts = (key) => {
         
-        const batchNoSearch = query(collection(db, "posts/"), limit(20), orderBy("postTime", "desc"), startAfter(key));
-        const batchSearch = query(collection(db, "posts/"), orderBy("postTime"), limit(20), startAfter(key), where("postDescCombined", "array-contains", search));
-        const batchSearchByPrice = query(collection(db, "posts/"), orderBy("priceNum"), limit(20), startAfter(key), where("postDescCombined", "array-contains", search), where("priceNum", "!=", 0));
-        const batchNoSearchByPrice = query(collection(db, "posts/"), limit(20), orderBy("priceNum"), startAfter(key), where("priceNum", "!=", 0));
+        const batchNoSearch = query(collection(db, "posts/"), limit(20), orderBy("postTime", "desc"), startAfter(key), where("category", "==", "1"));
+        const batchSearch = query(collection(db, "posts/"), orderBy("postTime"), limit(20), startAfter(key), where("postDescCombined", "array-contains", search), where("category", "==", "1"));
+        const batchSearchByPrice = query(collection(db, "posts/"), orderBy("priceNum"), limit(20), startAfter(key), where("postDescCombined", "array-contains", search), where("priceNum", "!=", 0), where("category", "==", "1"));
+        const batchNoSearchByPrice = query(collection(db, "posts/"), limit(20), orderBy("priceNum"), startAfter(key), where("priceNum", "!=", 0), where("category", "==", "1"));
         
         var batch = null; 
 
@@ -367,40 +229,9 @@ const PostCards = () => {
 
 
 
+                postsSnapshot.push(doc.data());
 
-                if (window.location.pathname == "/") {
-                    postsSnapshot.push(doc.data());
-
-                }
-
-                else if (window.location.pathname == "/books") {
-
-                    if (doc.data().category == "1") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/electronics") {
-
-                    if (doc.data().category == "2") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/apparel") {
-
-                    if (doc.data().category == "3") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
-                else if (window.location.pathname == "/room-items") {
-
-                    if (doc.data().category == "4") {
-                        postsSnapshot.push(doc.data());
-                    }
-                }
-
+             
                 lastKeySnapshot = doc.data().postTime;
 
 
@@ -568,8 +399,6 @@ const PostCards = () => {
             <div class="card mb-4">
 
                 <div class="card-body w-100">
-                <p class="lead"><b>Aware of glitches involving comments not displaying correctly, update coming soon.</b></p>
-
                     <p class="lead">More features will be added. You are invitied to <a target="_blank" href="https://forms.gle/jjDBXjmKBg1KMKRz5">provide feedback here.</a></p>
                     <p class="lead"><a href="/plannedFeatures">Click here for a list of planned/upcoming features</a></p>
 
@@ -614,4 +443,4 @@ const PostCards = () => {
     )
 }
 
-export default PostCards;
+export default BookCards;

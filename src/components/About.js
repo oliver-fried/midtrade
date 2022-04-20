@@ -26,16 +26,13 @@ function About() {
             </p>
             
             <p class="lead">
-            If you want to help maintain/develop this project, text one of us: </p>
+            If you want to help maintain/develop this project, text me: </p>
 
             <p class="lead">
             Oliver Fried: 508-850-6770
             </p>
 
-            <p class="lead">
-           Raymond Tong: 630-765-2886
-            </p>
-
+            
             
 
           </div>

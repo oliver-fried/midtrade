@@ -14,7 +14,7 @@ function TermsOfUse() {
           
           <div>
             <h1>Terms of Use</h1>
-            <p>Basically, don't do anything that will get us in trouble for making this website, or in someway hurt others using this website.</p>
+            <p>Basically, don't do anything that will get me in trouble for making this website, or in someway hurt others using this website. The stuff below should hopefully prevent me from getting fried.</p>
             <p>
             WELCOME TO MIDTRADE. We (Midtrade) hope you find it useful. By accessing or otherwise interacting with our servers, services, websites, mobile app ("App"), or any associated content/postings (together, "Midtrade"), 
             you agree to these Terms of Use ("TOU") (last updated February 19th, 2022). You acknowledge and agree Midtrade is a private site. If you are accessing or using Midtrade on behalf of a business, you 

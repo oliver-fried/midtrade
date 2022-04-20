@@ -31,6 +31,8 @@ function PlannedFeatures(props) {
           <h1 class="lead">- Description tags to posts (functioning as a hashtag)</h1>
           <h1 class=" lead">- Dedicated textbook section</h1>
           <h1 class=" lead">- Ability to edit posted posts</h1>
+          <h1 class=" lead">- Multi-word search functionality</h1>
+
 
 
           <div class="btn-group w-100 " role="group">

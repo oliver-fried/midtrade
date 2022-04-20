@@ -4,8 +4,8 @@ import { AuthContext } from "../Auth.js";
 import { getAuth, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
 import { Button, Container } from "react-bootstrap";
 
+
 const Login = ({ history }) => {
-  console.log("test")
 
 
     const [ currentUser, setCurrentUser ]  = useState();
@@ -38,7 +38,8 @@ const Login = ({ history }) => {
   if (currentUser) {
     return <Redirect to="/" />;
   }
-  const titleTextStyle = {fontSize:"10vw"}
+  const titleTextStyle = {fontSize:"7vw",
+                         }
   const backgroundStyle = {backgroundImage:"linear-gradient(135deg, #7accff,#001fcf)"}
 
   
@@ -51,8 +52,8 @@ const Login = ({ history }) => {
     <div class="mx-auto text-center">
         
     <h1 class="text-white" style={titleTextStyle}>Midtrade</h1>
-      <button type="button" class="btn btn-light mr-3 ml-3"  onClick={handleLogin}>Log in with your USNA account</button>
-      <p class="text-small text-white mt-2">(Not working? Enable cookies.)</p>
+      <button type="button" class="btn btn-light mr-3 ml-3"   onClick={handleLogin}>Log in with your USNA account</button>
+      <p class="text-small text-white mt-2">(Not working? Enable cookies by clicking the eye icon on the right side of your browser bar.)</p>
       
       </div>
       

@@ -14,6 +14,7 @@ function Prohibited() {
             <p>Here is a partial list of goods, services, and content prohibited on Midtrade:</p>
 
             <ul>
+                <li><b>ANY U.S. MILITARY UNIFORM ITEM (selling these constitute a UCMJ offense)</b></li>
                 <li>any good, or content, that violates the law or legal rights of others, or the Uniform Code of Military Justice</li>
                 <li>weapons; firearms/guns and components; BB/pellet, stun, and spear guns; etc</li>
                 <li>ammunition, clips, cartridges, reloading materials, gunpowder, fireworks, explosives</li>

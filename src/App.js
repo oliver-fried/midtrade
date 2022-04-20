@@ -16,7 +16,7 @@ function App() {
                     
 
           <Route path="/login" component={() => <Login />} />
-          <PrivateRoute path="/" component={() => <Home />} />
+          <PrivateRoute path="/"  component={() => <Home />} />
 
     
         </Switch>

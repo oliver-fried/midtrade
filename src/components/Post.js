@@ -5,6 +5,8 @@ import { AuthProvider } from "../Auth.js";
 import { getAuth } from "firebase/auth";
 import { withRouter } from "react-router-dom";
 import { getStorage, uploadBytesResumable, getDownloadURL, ref } from "firebase/storage";
+import { doc, getFirestore, setDoc } from "firebase/firestore"; 
+
 
 
 
@@ -16,6 +18,7 @@ const Post = ({ history }) => {
   const [postTitle, setPostTitle] = useState("");
   const [price, setPrice] = useState("");
   const [room, setRoom] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [file, setFile] = useState("");
   const [imageAttached, setImageAttached] = useState(false);
   
@@ -114,10 +117,6 @@ const Post = ({ history }) => {
   
 
 
-
-    
-  
-  
   
   const handleSubmit = (e) => {
     
@@ -132,7 +131,7 @@ const Post = ({ history }) => {
       };
 
       // Create a root reference
-      const db = getDatabase();
+      const db = getFirestore();
 
       const storage = getStorage();
 
@@ -187,23 +186,32 @@ uploadTask.on('state_changed',
       downloadURL = "";
     }
     
-    set(fireRef(db, 'posts/' + postTime), {
+    const postDescArray = description.toLowerCase().split(" ")
+    const postTitleSplit = postTitle.toLowerCase().split(" ");
+    const priceNum = parseFloat(price)
+     console.log(postTitleSplit +" " + postDescArray)
+     setDoc(doc(db, 'posts/' + postTime), {
       postTitle: String(postTitle),
       email: getAuth().currentUser.email,
-      price: String(price),
+      price: price,
+      priceNum: priceNum,
       description: String(description),
       userid: getAuth().currentUser.uid,
       room: String(room),
-      postTime: String(postTime),
+      postTime: postTime,
+      phoneNumber: phoneNumber,
       date: monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear(),
       downloadURL: downloadURL,
       shortDesc: shortDesc,
       idSelector: "#a" + String(postTime),
       initials: getAuth().currentUser.displayName.charAt(0) + getAuth().currentUser.displayName.split(" ")[1].charAt(0) + " '" + getAuth().currentUser.email.charAt(1) + getAuth().currentUser.email.charAt(2),
-      category: category
+      category: category,
+      postDescCombined: postDescArray.concat(postTitle.toLowerCase().split(" "))
     }).then(() => {
-      
+
       history.push("/");
+      window.location.reload(false);
+
       setPending(false);
     })
     .catch((error) => {
@@ -253,8 +261,8 @@ uploadTask.on('state_changed',
                   <option value="1">Books</option>
                   <option value="2">Electronics</option>
                   <option value="3">Apparel</option>
-                  <option value="3">Room Items</option>
-                  <option value="3">Other</option>
+                  <option value="4">Room Items</option>
+                  <option value="5">Other</option>
 
 
                 </select>
@@ -270,9 +278,16 @@ uploadTask.on('state_changed',
                 
                 <div class="mb-3">
                     <label for="room" class="form-label"><h5>Room Number</h5></label>
-                    <input maxLength="4" pattern="[0-9]{4}" type="number" min="1001" max="8499" step="1" class="form-control" id="room" step="1" value={room} onChange={(e) => setRoom(e.target.value)} required/>
+                    <input maxLength="4" pattern="[0-9]{4}" type="number" min="1001" max="8499" step="1" class="form-control" id="room"  value={room} onChange={(e) => setRoom(e.target.value)} required/>
                     <small id="room" class="form-text text-muted">
                     Enter your four-digit Bancroft room number
+                    </small>
+                </div>
+                <div class="mb-3">
+                    <label for="room" class="form-label"><h5>Phone Number</h5></label>
+                    <input   class="form-control" id="room"  value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                    <small id="phoneNumber" class="form-text text-muted">
+                    (Optional) Enter your phone number so buyers can easily contact you
                     </small>
                 </div>
                 <div class="mb-3">
@@ -292,8 +307,22 @@ uploadTask.on('state_changed',
           <div class="invalid-feedback">
             You must agree before submitting.
           </div>
+
+          <div class="mt-3">
+          <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required></input>
+          <label class="form-check-label" for="invalidCheck">
+          This is not a U.S. Military uniform item
+  
+         </label>
+         
+          </div>
+          
+          <div class="invalid-feedback">
+            You must agree before submitting.
+          </div>
           
         </div>
+       
 
         
 
