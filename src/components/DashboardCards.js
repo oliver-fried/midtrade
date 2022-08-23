@@ -28,15 +28,16 @@ const DashboardCards = () => {
     const [endOfData, setEndOfData] = useState(false);
     const [comment, setComment] = useState("");
     const [search, setSearch] = useState("");
+    const [postedItemCardsViewing, setPostedItemCardsViewing] = useState(true);
 
     const db = getFirestore();
 
     useEffect(() => {
 
       
-      var batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(20), where("userid", "==", getAuth().currentUser.uid));
+      var batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(5), where("userid", "==", getAuth().currentUser.uid));
       if(getAuth().currentUser.uid === "O43rYBlmIWPUvfme7TOy7iG4DtA3") {
-         batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(20));
+         batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(5));
       }
         // get the first 5 posts
 
@@ -46,7 +47,6 @@ const DashboardCards = () => {
             querySnapshot.forEach((doc) => {
 
 
-                const batchComments = query(collection(db, "posts/" + doc.data().postTime + "/comments/"));
 
                 postsSnapshot.push(doc.data());
 
@@ -74,9 +74,14 @@ const DashboardCards = () => {
 
 
     const fetchMorePosts = (key) => {
-        
-      const batch = query(collection(db, "posts/"), limit(20), orderBy("postTime", "desc"), startAfter(key), where("userid", "==", getAuth().currentUser.uid));
+        var batch = null
+        if(postedItemCardsViewing) {
+             batch = query(collection(db, "posts/"), limit(20), orderBy("postTime", "desc"), startAfter(key), where("userid", "==", getAuth().currentUser.uid));
+        }
 
+        else {
+                 batch = query(collection(db, "requests/"), limit(5), orderBy("postTime", "desc"), startAfter(key), where("userid", "==", getAuth().currentUser.uid));
+        }
       
 
       if(batch === null ) {
@@ -102,38 +107,8 @@ const DashboardCards = () => {
 
 
 
-              if (window.location.pathname == "/") {
                   postsSnapshot.push(doc.data());
 
-              }
-
-              else if (window.location.pathname == "/books") {
-
-                  if (doc.data().category == "1") {
-                      postsSnapshot.push(doc.data());
-                  }
-              }
-
-              else if (window.location.pathname == "/electronics") {
-
-                  if (doc.data().category == "2") {
-                      postsSnapshot.push(doc.data());
-                  }
-              }
-
-              else if (window.location.pathname == "/apparel") {
-
-                  if (doc.data().category == "3") {
-                      postsSnapshot.push(doc.data());
-                  }
-              }
-
-              else if (window.location.pathname == "/room-items") {
-
-                  if (doc.data().category == "4") {
-                      postsSnapshot.push(doc.data());
-                  }
-              }
 
               lastKeySnapshot = doc.data().postTime;
 
@@ -155,6 +130,88 @@ const DashboardCards = () => {
 
   }
 
+
+  const requestItemQuery = () => {
+    setEndOfData(false)
+
+      setPostedItemCardsViewing(false);
+
+
+      var batch = query(collection(db, "requests/"), orderBy("postTime", "desc"), limit(5), where("userid", "==", getAuth().currentUser.uid));
+      if(getAuth().currentUser.uid === "O43rYBlmIWPUvfme7TOy7iG4DtA3") {
+         batch = query(collection(db, "requests/"), orderBy("postTime", "desc"), limit(5));
+      }
+        // get the first 5 posts
+
+        const dbSnapshot = onSnapshot(batch, (querySnapshot) => {
+            const postsSnapshot = [];
+            let lastKeySnapshot = "";
+            querySnapshot.forEach((doc) => {
+
+
+
+                postsSnapshot.push(doc.data());
+
+
+                lastKeySnapshot = doc.data().postTime;
+
+
+
+            })
+
+            setPosts(postsSnapshot);
+
+
+            setLastKey(lastKeySnapshot);
+
+        }
+
+        )
+
+
+
+  }
+
+  const postedItemQuery = () => {
+    setEndOfData(false)
+
+      setPostedItemCardsViewing(true);
+
+
+      var batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(20), where("userid", "==", getAuth().currentUser.uid));
+      if(getAuth().currentUser.uid === "O43rYBlmIWPUvfme7TOy7iG4DtA3") {
+         batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(20));
+      }
+        // get the first 5 posts
+
+        const dbSnapshot = onSnapshot(batch, (querySnapshot) => {
+            const postsSnapshot = [];
+            let lastKeySnapshot = "";
+            querySnapshot.forEach((doc) => {
+
+
+
+                postsSnapshot.push(doc.data());
+
+
+                lastKeySnapshot = doc.data().postTime;
+
+
+
+            })
+
+            setPosts(postsSnapshot);
+
+
+            setLastKey(lastKeySnapshot);
+
+        }
+
+        )
+
+
+
+  }
 
 
     const handleCommentSubmit = (postID, URL) => {
@@ -245,6 +302,8 @@ const DashboardCards = () => {
     }
 
     function pricePrinting(givenPrice) {
+
+        if (givenPrice != -1) {
         if (givenPrice == 0) {
             return <>Free</>
         }
@@ -252,6 +311,11 @@ const DashboardCards = () => {
         else {
             return <>${givenPrice}</>
         }
+    }
+
+    else {
+        return <></>
+    }
     }
 
 
@@ -281,24 +345,28 @@ const DashboardCards = () => {
 
     return (
         <div>
+            <div class="px-0">
+                        <h1 >My Posts</h1>
+                        </div>
 
-
-            <div class="card mb-3">
-
-                <div class="card-body w-100">
-                    <p class="lead">This is the beta. More features will be added. You are invitied to <a target="_blank" href="https://forms.gle/jjDBXjmKBg1KMKRz5">provide feedback here.</a></p>
-                    <p class="lead"><a href="/plannedFeatures">Click here for a list of planned/upcoming features</a></p>
-
-
-                </div>
-            </div>
+<div class="btn-group w-100 mb-3 mt-2" role="group">
+            <a onClick={() => postedItemQuery()} class={`btn ${
+                  (postedItemCardsViewing) ? "btn-primary" : "btn-outline-primary"
+                }`}>
+               Posted Items</a>
+              
+            <a onClick={() => requestItemQuery()} class={`btn ${
+                 (!postedItemCardsViewing) ? "btn-primary" : "btn-outline-primary"
+                }`}>
+               Requested Items</a>
+               </div>
 
            
 
 
             {posts ? posts.map((post, i) =>
                 <React.Fragment key={i}>
-                    <DashboardCard post={post} search={search} noStyle={noStyle} pricePrinting={pricePrinting} imageDec={imageDec} setComment={setComment} timePrinting={timePrinting} comment={comment} handleCommentSubmit={handleCommentSubmit} />
+                    <DashboardCard post={post} search={search} noStyle={noStyle} pricePrinting={pricePrinting} imageDec={imageDec} setComment={setComment} timePrinting={timePrinting} comment={comment} handleCommentSubmit={handleCommentSubmit} postedItemCardsViewing={postedItemCardsViewing} />
                 </React.Fragment>
             ) : <div>No posts</div>}
             {loadMoreButton(endOfData)}

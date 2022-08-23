@@ -1,16 +1,37 @@
 import React, { useState } from "react";
 import { getDatabase, ref as fireRef, set } from "firebase/database";
-import { Navigation } from "./"
+import { Navigation } from "."
 import { AuthProvider } from "../Auth.js";
 import { getAuth } from "firebase/auth";
 import { withRouter } from "react-router-dom";
 import { getStorage, uploadBytesResumable, getDownloadURL, ref } from "firebase/storage";
 import { doc, getFirestore, setDoc } from "firebase/firestore"; 
+const Compress = require('compress.js')
+
 
 
 
 
 const Post = ({ history }) => {
+
+  function resizeImageFn(file) {
+    const compress = new Compress()
+
+    const resizedImage = compress.compress([file], {
+      size: 0.25, // the max size in MB, defaults to 2MB
+      quality: 1, // the quality of the image, max is 1,
+      maxWidth: 300, // the max width of the output image, defaults to 1920px
+      maxHeight: 300, // the max height of the output image, defaults to 1920px
+      resize: true // defaults to true, set false if you do not want to resize the image width and height
+    })
+    const img = resizedImage[0];
+    const base64str = img.data
+    const imgExt = img.ext
+    const resizedFiile = Compress.convertBase64ToFile(base64str, imgExt)
+    return resizedFiile;
+  }
+
+
   const [pending, setPending] = useState(false);
 
   const storage1 = getDatabase();
@@ -59,60 +80,64 @@ const Post = ({ history }) => {
 
 
 
-  // This takes the uploaded image and displays it to the canvas so the 
+// This takes the uploaded image and displays it to the canvas so the 
   // user knows what they are uploading
   function showOnCanvas(fileImage, filePresent) {
   
-  var canvas = document.getElementById('imgCanvas');
-  var ctx = canvas.getContext('2d');
-  var reader = new FileReader();
-
-  if(filePresent){
-    
-    
-  reader.onload = function(event) {
-    var img = new Image();
-    img.onload = function() {
-      var hRatio = canvas.width / img.width    ;
-      var vRatio =  canvas.height / img.height  ;
-      var ratio  = Math.min ( hRatio, vRatio );
-      var centerShift_x = ( canvas.width - img.width*ratio ) / 2;
-      var centerShift_y = ( canvas.height - img.height*ratio ) / 2;  
-      ctx.clearRect(0,0,canvas.width, canvas.height);
-      ctx.drawImage(img, 0,0, img.width, img.height,0, 0,img.width*ratio, img.height*ratio);
+    var canvas = document.getElementById('imgCanvas');
+    var ctx = canvas.getContext('2d');
+    var reader = new FileReader();
+  
+    if(filePresent){
       
-
       
-     
-     
-      return new Promise((resolve) => {
-        canvas.toBlob((blob) => {
-          resolve(
-          console.log(file));
-        });
-      });      
+    reader.onload = function(event) {
+      var img = new Image();
+      img.onload = function() {
+        var hRatio = canvas.width / img.width    ;
+        var vRatio =  canvas.height / img.height  ;
+        var ratio  = Math.min ( hRatio, vRatio );
+        var centerShift_x = ( canvas.width - img.width*ratio ) / 2;
+        var centerShift_y = ( canvas.height - img.height*ratio ) / 2;  
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        ctx.drawImage(img, 0,0, img.width, img.height,0, 0,img.width*ratio, img.height*ratio);
+        
+  
+        
+       
+       
+        return new Promise((resolve) => {
+          canvas.toBlob((blob) => {
+            resolve(
+            console.log(file));
+          });
+        });      
+      }
+  
+      
+      img.src = event.target.result;
     }
-
+  
+      if(fileImage && fileImage.type.match('image.*')){
+        reader.readAsDataURL(fileImage);
+      }
+  
+      else  {
+      }
+    }
+  
+  
+      else {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+  
+  
+      }
+  
+      }
+      
     
-    img.src = event.target.result;
-  }
-
-    if(fileImage && fileImage.type.match('image.*')){
-      reader.readAsDataURL(fileImage);
-    }
-
-    else  {
-    }
-  }
-
-
-    else {
-      ctx.clearRect(0,0,canvas.width, canvas.height);
-
-
-    }
-
-    }
+  
+      
     
   
 
@@ -127,7 +152,7 @@ const Post = ({ history }) => {
       const postTime = Date.now()
 
       const metadata = {
-        contentType: 'image/jpg'
+        contentType: 'image/jpeg'
       };
 
       // Create a root reference
@@ -137,7 +162,7 @@ const Post = ({ history }) => {
 
 
     
-    const storageRef = ref(storage, "images/" + postTime + "/" + getAuth().currentUser.uid);
+    const storageRef = ref(storage, "images/" + postTime + getAuth().currentUser.uid +".jpeg");
     const uploadTask = uploadBytesResumable(storageRef, image, metadata);
 
     
@@ -177,6 +202,7 @@ uploadTask.on('state_changed',
   }
 }, 
 () => {
+ 
   // Upload completed successfully, now we can get the download URL
   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
     console.log('File available at', downloadURL);
@@ -202,6 +228,7 @@ uploadTask.on('state_changed',
       phoneNumber: phoneNumber,
       date: monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear(),
       downloadURL: downloadURL,
+      imageTitle: postTime + getAuth().currentUser.uid +"_600x600.jpeg",
       shortDesc: shortDesc,
       idSelector: "#a" + String(postTime),
       initials: getAuth().currentUser.displayName.charAt(0) + getAuth().currentUser.displayName.split(" ")[1].charAt(0) + " '" + getAuth().currentUser.email.charAt(1) + getAuth().currentUser.email.charAt(2),
@@ -240,7 +267,22 @@ uploadTask.on('state_changed',
 
  } 
   return (
-    
+
+    <div>
+      
+    <div class="btn-group w-100 mb-3" role="group">
+            <a href="/post-item" class={`btn ${
+                  (window.location.pathname === "/post-item") ? "btn-primary" : "btn-outline-primary"
+                }`}>
+               Post Item</a>
+              
+            <a href="/request-item" class={`btn ${
+                  (window.location.pathname === "/request-item") ? "btn-primary" : "btn-outline-primary"
+                }`}>
+               Request Item</a>
+               </div>
+               
+            
           
 
             <form onSubmit={handleSubmit}>
@@ -285,9 +327,9 @@ uploadTask.on('state_changed',
                 </div>
                 <div class="mb-3">
                     <label for="room" class="form-label"><h5>Phone Number</h5></label>
-                    <input   class="form-control" id="room"  value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                    <input   class="form-control" id="room"  maxLength="10" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
                     <small id="phoneNumber" class="form-text text-muted">
-                    (Optional) Enter your phone number so buyers can easily contact you
+                    (Optional) Enter your phone number so buyers can easily contact you (no dashes)
                     </small>
                 </div>
                 <div class="mb-3">
@@ -341,8 +383,8 @@ uploadTask.on('state_changed',
                     Please make sure to delete your post once your item has sold
                     </small>
 
-                <div class="w-100 mt-4"><canvas height="400" width="300" id='imgCanvas'></canvas></div>
-            </form>
+                <div class="w-100 mt-4"><canvas height="200" width="150" id='imgCanvas'></canvas></div>
+            </form></div>
           
        
      

@@ -10,23 +10,38 @@ import { collection, where, query, orderBy, startAfter, limit, getDocs, deleteDo
 const collumnStyle = { gap: "100px" }
 const proPicStyle = { height: "5vw", maxHeight: "40px", minHeight: "40px" }
 
-const deletePost = ( postTime ) => {
+const deletePost = ( postTime, postedItemCardsViewing ) => {
     const db = getFirestore();
+
+    if(postedItemCardsViewing) {
     deleteDoc(doc(db, "posts", `${postTime}`));
 
     const storageVar = getStorage()
       const storageRef = storRef(storageVar, 'images/' + postTime + "/" + getAuth().currentUser.uid);
       deleteObject(storageRef);
+    }
+
+    else {
+        deleteDoc(doc(db, "requests", `${postTime}`));
+
+    }
 
 }
 
-const deleteComment = (postCardID, commentID) => {
+const deleteComment = (postCardID, commentID, postedItemCardsViewing) => {
 
     const db = getFirestore();
+
+    if(postedItemCardsViewing) {
     deleteDoc(doc(db, 'posts/' + postCardID + "/comments/", `${commentID}`))
+    }
+    else {
+        deleteDoc(doc(db, 'requests/' + postCardID + "/comments/", `${commentID}`))
+
+    }
 }
 
-const CommentsDisplay = ( {postTime, postCommentsArray} ) => {
+const CommentsDisplay = ( {postTime, postCommentsArray, postedItemCardsViewing} ) => {
     if (!postCommentsArray) {
         return <div></div>
     }
@@ -47,7 +62,7 @@ const CommentsDisplay = ( {postTime, postCommentsArray} ) => {
                                 <p class="text-center"></p>
                             </div>
                             <div class="col-1 m-1">
-                                {comment.userID == getAuth().currentUser.uid ? <h5><a class="text-danger" onClick={() => deleteComment(postTime, comment.time)}><i class="bi bi-trash "></i></a></h5> : <div></div>}
+                                {comment.userID == getAuth().currentUser.uid ? <h5><a class="text-danger" onClick={() => deleteComment(postTime, comment.time, postedItemCardsViewing)}><i class="bi bi-trash "></i></a></h5> : <div></div>}
                             </div>
                         </div>
                     </div>)}
@@ -58,7 +73,7 @@ const CommentsDisplay = ( {postTime, postCommentsArray} ) => {
 
 }
 
-const DashboardCard = ({ post, search, noStyle, pricePrinting, imageDec, setComment, timePrinting, comment, handleCommentSubmit, }) => {
+const DashboardCard = ({ post, search, noStyle, pricePrinting, imageDec, setComment, timePrinting, comment, handleCommentSubmit, postedItemCardsViewing }) => {
     const [comments, setComments] = useState([])
     useEffect(() => onSnapshot(query(collection(getFirestore(), "posts/" + post.postTime + "/comments/")),
         commentsSnapshot => setComments(commentsSnapshot.docs.map(doc => doc.data()))), [])
@@ -87,7 +102,7 @@ const DashboardCard = ({ post, search, noStyle, pricePrinting, imageDec, setComm
                                 <div class="col-1">
                                             
                                             <h3 class="text-danger">
-                                                <a onClick={() => {deletePost(post.postTime)}}><i class="bi bi-trash "></i></a></h3>
+                                                <a onClick={() => {deletePost(post.postTime, postedItemCardsViewing)}}><i class="bi bi-trash "></i></a></h3>
                                         </div>
                                 
 

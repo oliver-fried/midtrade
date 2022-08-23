@@ -15,7 +15,7 @@ import { ref as fireRef, set } from "firebase/database";
 import { doc, FieldValue, getDocFromServer, onSnapshot, QuerySnapshot } from "firebase/firestore";
 import { arrayUnion } from "firebase/firestore";
 import { collection, where, query, orderBy, startAfter, limit, getDocs, getFirestore, endBefore, setDoc } from "firebase/firestore";
-import { getStorage, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getStorage, uploadBytesResumable, getDownloadURL, ref as storageRef } from "firebase/storage";
 import { createPortal } from "react-dom";
 import PostCard from "./PostCard";
 
@@ -36,7 +36,7 @@ const PostCards = () => {
     useEffect(() => {
 
         // get the first 5 posts
-        const batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(20));
+        const batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(7));
 
         const dbSnapshot = onSnapshot(batch, (querySnapshot) => {
             const postsSnapshot = [];
@@ -44,7 +44,6 @@ const PostCards = () => {
             querySnapshot.forEach((doc) => {
 
 
-                const batchComments = query(collection(db, "posts/" + doc.data().postTime + "/comments/"));
 
 
 
@@ -110,7 +109,7 @@ const PostCards = () => {
 
         setEndOfData(false)
 
-        const batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(20), where("priceNum", "!=", 0));
+        const batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(7), where("priceNum", "!=", 0));
 
         const dbSnapshot = onSnapshot(batch, (querySnapshot) => {
             const postsSnapshot = [];
@@ -118,7 +117,6 @@ const PostCards = () => {
             querySnapshot.forEach((doc) => {
 
 
-                const batchComments = query(collection(db, "posts/" + doc.data().postTime + "/comments/"));
 
 
 
@@ -174,10 +172,10 @@ const PostCards = () => {
         })
     }
 
-    const searchTime = () => {
+     const searchTime = () => {
         setEndOfData(false)
 
-        const batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(20));
+        const batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(7));
 
         const dbSnapshot = onSnapshot(batch, (querySnapshot) => {
             const postsSnapshot = [];
@@ -185,7 +183,6 @@ const PostCards = () => {
             querySnapshot.forEach((doc) => {
 
 
-                const batchComments = query(collection(db, "posts/" + doc.data().postTime + "/comments/"));
 
 
 
@@ -245,10 +242,11 @@ const PostCards = () => {
     const handleSearch = (e) => {
         setEndOfData(false)
 
-        var batch = query(collection(db, "posts/"), orderBy("postTime"), limit(20), where("postDescCombined", "array-contains", search));
-
+        if(searchByTime) {
+            var batch = query(collection(db, "posts/"), orderBy("postTime"), limit(7), where("postDescCombined", "array-contains", search));
+        }
         if(!searchByTime) {
-            batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(20), where("postDescCombined", "array-contains", search), where("priceNum", "!=", 0));
+            batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(7), where("postDescCombined", "array-contains", search), where("priceNum", "!=", 0));
         }
 
 
@@ -256,9 +254,6 @@ const PostCards = () => {
             const postsSnapshot = [];
             let lastKeySnapshot = "";
             querySnapshot.forEach((doc) => {
-
-
-                const batchComments = query(collection(db, "posts/" + doc.data().postTime + "/comments/"));
 
 
 
@@ -320,27 +315,24 @@ const PostCards = () => {
 
     const fetchMorePosts = (key) => {
         
-        const batchNoSearch = query(collection(db, "posts/"), limit(20), orderBy("postTime", "desc"), startAfter(key));
-        const batchSearch = query(collection(db, "posts/"), orderBy("postTime"), limit(20), startAfter(key), where("postDescCombined", "array-contains", search));
-        const batchSearchByPrice = query(collection(db, "posts/"), orderBy("priceNum"), limit(20), startAfter(key), where("postDescCombined", "array-contains", search), where("priceNum", "!=", 0));
-        const batchNoSearchByPrice = query(collection(db, "posts/"), limit(20), orderBy("priceNum"), startAfter(key), where("priceNum", "!=", 0));
+       
         
         var batch = null; 
 
         if(searchedLast && searchByTime) {
-             batch = batchSearch;
+             batch = query(collection(db, "posts/"), orderBy("postTime"), limit(7), startAfter(key), where("postDescCombined", "array-contains", search));
         }
 
         else if(searchedLast && !searchByTime) {
-             batch = batchSearchByPrice;
+             batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(7), startAfter(key), where("postDescCombined", "array-contains", search), where("priceNum", "!=", 0));
         }
 
         else if(!searchedLast && !searchByTime) {
-             batch = batchNoSearchByPrice;
+             batch = query(collection(db, "posts/"), limit(7), orderBy("priceNum"), startAfter(key), where("priceNum", "!=", 0));
         }
 
         else if(!searchedLast && searchByTime){
-             batch = batchNoSearch;
+             batch = query(collection(db, "posts/"), limit(7), orderBy("postTime", "desc"), startAfter(key));
         }
 
 
@@ -487,37 +479,77 @@ const PostCards = () => {
 
 
     // this function handles getting the post photo
-    function imageDec(url) {
-        if (url != "") {
-            return <div class="" style={imageClass}><img src={url} class="img-fluid w-100" /> </div>
+    function imageDec(givenURL, imageTitle) {
+
+            //var url = getDownloadURL(storageRef(getStorage(), "images/" + imageTitle))
+
+        
+            
+
+            getDownloadURL(storageRef(getStorage(), "images/test_600x600.jpeg")).then((newURL) => {
+                console.log(newURL)
+                const img = document.getElementById('myimg');
+                img.setAttribute('src', newURL);
+                //return <div  style={imageClass}>asdfasdfads<img src={newURL} class="img-fluid w-100" /> </div>
+            }).catch((error) => {
+                console.log(givenURL)
+               
+                const img = document.getElementById('myimg');
+                img.setAttribute('src', givenURL);
+                
+    
+            
+
+            })
+
+            return <div class="" style={imageClass}><img id="myimg" class="img-fluid w-100" /> </div>
+
+
+                
+
+            
+            
+            
+
+            
+
+            
+               
+
         }
-        else {
-            return <></>
-        }
-    }
+    
+        
+
+         
+    
 
     // This function takes the initial post time and calculates a realtime 
     // time since post to be displayed on the card header
-    function timePrinting(postTime, date, room, initials) {
+    function timePrinting(postTime, date, room, initials, phoneNumber) {
+
+        phoneNumber ? (phoneNumber = "" + phoneNumber.substring(0, 3) + "-" + phoneNumber.substring(3, 6) + "-" + phoneNumber.substring(6, 10)) : phoneNumber = phoneNumber
 
         if ((Date.now() - postTime) <= 60000) {
-            return <p><i class="bi bi-clock mr-1"></i> moments ago<i class="bi bi-dot mr-1"></i><i class="bi bi-geo-alt"> </i>{room}<i class="bi bi-dot mr-1"></i> {initials}</p>
+            return <p><i class="bi bi-clock mr-1"></i> moments ago<i class="bi bi-dot mr-1"></i><i class="bi bi-geo-alt"> </i>{room}<i class="bi bi-dot mr-1"></i> {initials} {phoneNumber ? (<><i class="bi bi-dot mr-2"></i> <i class="bi bi-telephone"></i> {phoneNumber}</>) : <></>}
+            </p>
         }
 
         else if ((Date.now() - postTime) < 3600000) {
-            return <p><i class="bi bi-clock ml-3"></i> {Math.ceil((Date.now() - postTime) / 60000)} minutes ago <i class="bi bi-dot mr-1"> </i><i class="bi bi-geo-alt"> </i>{room} <i class="bi bi-dot mr-1"></i> {initials}</p>
+            return <p><i class="bi bi-clock ml-3"></i> {Math.ceil((Date.now() - postTime) / 60000)} minutes ago <i class="bi bi-dot mr-1"> </i><i class="bi bi-geo-alt"> </i>{room} <i class="bi bi-dot mr-2"></i> {initials} {phoneNumber ? (<><i class="bi bi-dot mr-2"></i> <i class="mr-1 bi bi-telephone"></i> {phoneNumber}</>) : <></>}</p>
         }
 
         else if ((Date.now() - postTime) < 36000000) {
-            return <p><i class="bi bi-clock mr-1"></i> {Math.floor((Date.now() - postTime) / 3600000)} hrs ago <i class="bi bi-dot mr-1"></i><i class="bi bi-geo-alt"> </i>{room}<i class="bi bi-dot mr-1"></i> {initials}</p>
+            return <p><i class="bi bi-clock mr-1"></i> {Math.floor((Date.now() - postTime) / 3600000)} hrs ago <i class="bi bi-dot mr-1"></i><i class="bi bi-geo-alt"> </i>{room}<i class="bi bi-dot mr-2"></i> {initials} {phoneNumber ? (<><i class="bi bi-dot mr-2"></i> <i class=" mr-1 bi bi-telephone"></i> {phoneNumber}</>) : <></>}</p>
         }
 
         else {
-            return <p><i class="bi bi-clock mr-1"></i> {date}<i class="bi bi-dot mr-1"></i><i class="bi bi-geo-alt"> </i>{room}<i class="bi bi-dot mr-1"></i> {initials}</p>
+            return <p><i class="bi bi-clock mr-1"></i> {date}<i class="bi bi-dot mr-1"></i><i class="bi bi-geo-alt"> </i>{room}<i class="bi bi-dot mr-1"></i> {initials}{phoneNumber ? (<><i class="bi bi-dot mr-2"></i> <i class="bi bi-telephone mr-1"></i>{phoneNumber}</>) : <></>}</p>
         }
     }
 
     function pricePrinting(givenPrice) {
+
+        if (givenPrice != -1) {
         if (givenPrice == 0) {
             return <>Free</>
         }
@@ -525,6 +557,11 @@ const PostCards = () => {
         else {
             return <>${givenPrice}</>
         }
+    }
+
+    else {
+        return <></>
+    }
     }
 
 
@@ -562,16 +599,22 @@ const PostCards = () => {
 
     return (
         <div>
-            
+                        <div class="px-1">
+                        <h1 >All Posts</h1>
+                        </div>
+                           
+
                
 
             <div class="card mb-4">
 
                 <div class="card-body w-100">
-                <p class="lead"><b>Aware of glitches involving comments not displaying correctly, update coming soon.</b></p>
+                <h2 class="text-danger"><b>Midtrade is shutting down.</b></h2>
 
-                    <p class="lead">More features will be added. You are invitied to <a target="_blank" href="https://forms.gle/jjDBXjmKBg1KMKRz5">provide feedback here.</a></p>
-                    <p class="lead"><a href="/plannedFeatures">Click here for a list of planned/upcoming features</a></p>
+                <p class="lead"><b>Text 508-850-6770 before August 26 if you want to take over this project.</b></p>
+                <p class="lead"><b>All code is open-source and <a href="https://github.com/oliver-fried/midtrade">located here.</a> If you want to manage this project, I'll show you how to set it up. It's pretty simple and you can modify and upgrade the website as you want.</b></p>
+
+                   
 
 
                 </div>

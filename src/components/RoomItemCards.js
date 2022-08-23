@@ -36,7 +36,7 @@ const RoomItemCards = () => {
     useEffect(() => {
 
         // get the first 5 posts
-        const batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(20), where("category", "==", "4"));
+        const batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(5), where("category", "==", "4"));
 
         const dbSnapshot = onSnapshot(batch, (querySnapshot) => {
             const postsSnapshot = [];
@@ -74,7 +74,7 @@ const RoomItemCards = () => {
 
         setEndOfData(false)
 
-        const batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(20), where("priceNum", "!=", 0), where("category", "==", "4"));
+        const batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(5), where("priceNum", "!=", 0), where("category", "==", "4"));
 
         const dbSnapshot = onSnapshot(batch, (querySnapshot) => {
             const postsSnapshot = [];
@@ -108,7 +108,7 @@ const RoomItemCards = () => {
     const searchTime = () => {
         setEndOfData(false)
 
-        const batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(20), where("category", "==", "4"));
+        const batch = query(collection(db, "posts/"), orderBy("postTime", "desc"), limit(5), where("category", "==", "4"));
 
         const dbSnapshot = onSnapshot(batch, (querySnapshot) => {
             const postsSnapshot = [];
@@ -139,10 +139,10 @@ const RoomItemCards = () => {
     const handleSearch = (e) => {
         setEndOfData(false)
 
-        var batch = query(collection(db, "posts/"), orderBy("postTime"), limit(20), where("postDescCombined", "array-contains", search), where("category", "==", "4"));
+        var batch = query(collection(db, "posts/"), orderBy("postTime"), limit(5), where("postDescCombined", "array-contains", search), where("category", "==", "4"));
 
         if(!searchByTime) {
-            batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(20), where("postDescCombined", "array-contains", search), where("priceNum", "!=", 0), where("category", "==", "4"));
+            batch = query(collection(db, "posts/"), orderBy("priceNum"), limit(5), where("postDescCombined", "array-contains", search), where("priceNum", "!=", 0), where("category", "==", "4"));
         }
 
 
@@ -182,10 +182,10 @@ const RoomItemCards = () => {
 
     const fetchMorePosts = (key) => {
         
-        const batchNoSearch = query(collection(db, "posts/"), limit(20), orderBy("postTime", "desc"), startAfter(key), where("category", "==", "4"));
-        const batchSearch = query(collection(db, "posts/"), orderBy("postTime"), limit(20), startAfter(key), where("postDescCombined", "array-contains", search), where("category", "==", "4"));
-        const batchSearchByPrice = query(collection(db, "posts/"), orderBy("priceNum"), limit(20), startAfter(key), where("postDescCombined", "array-contains", search), where("priceNum", "!=", 0), where("category", "==", "4"));
-        const batchNoSearchByPrice = query(collection(db, "posts/"), limit(20), orderBy("priceNum"), startAfter(key), where("priceNum", "!=", 0), where("category", "==", "4"));
+        const batchNoSearch = query(collection(db, "posts/"), limit(5), orderBy("postTime", "desc"), startAfter(key), where("category", "==", "4"));
+        const batchSearch = query(collection(db, "posts/"), orderBy("postTime"), limit(5), startAfter(key), where("postDescCombined", "array-contains", search), where("category", "==", "4"));
+        const batchSearchByPrice = query(collection(db, "posts/"), orderBy("priceNum"), limit(5), startAfter(key), where("postDescCombined", "array-contains", search), where("priceNum", "!=", 0), where("category", "==", "4"));
+        const batchNoSearchByPrice = query(collection(db, "posts/"), limit(5), orderBy("priceNum"), startAfter(key), where("priceNum", "!=", 0), where("category", "==", "4"));
         
         var batch = null; 
 
@@ -394,17 +394,11 @@ const RoomItemCards = () => {
     return (
         <div>
             
-               
+            <div class="px-1">
+                        <h1 >Room Items</h1>
+                        </div>
 
-            <div class="card mb-4">
-
-                <div class="card-body w-100">
-                    <p class="lead">More features will be added. You are invitied to <a target="_blank" href="https://forms.gle/jjDBXjmKBg1KMKRz5">provide feedback here.</a></p>
-                    <p class="lead"><a href="/plannedFeatures">Click here for a list of planned/upcoming features</a></p>
-
-
-                </div>
-            </div>
+          
             
             <div class="mb-3">
             <div class="input-group">

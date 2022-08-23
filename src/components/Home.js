@@ -14,6 +14,9 @@ import ElectronicCards from "./ElectronicCards";
 import ApparelCards from "./ApparelCards";
 import RoomItemCards from "./RoomItemCards";
 import FreeItemCards from "./FreeItemCards";
+import WantedCards from "./WantedCards";
+import PostItem from "./PostItem";
+import RequestItem from "./RequestItem";
 
 const handleSignOut = () => {
   signOut(getAuth()).then(() => {
@@ -125,6 +128,16 @@ function Home( props) {
                                 }`}> <h5><i class="fs-4 text-white bi  bi-arrow-up-square"></i><span class="   align-text-bottom  ms-2 text-white d-sm-inline">Free stuff</span></h5></a>
                             </li>
                             
+                            <li class="w-100 ms-3">
+                                <a href="/wanted" 
+                                
+                                
+                                class={`nav-link px-0  ${
+                                  window.location.pathname === "/wanted" ? "fw-bold" : ""
+                                }`}
+                                
+                                > <h5><i class="fs-4 text-white bi-search-heart"></i><span class="align-text-bottom ms-2 d-sm-inline text-white">Wanted</span></h5></a>
+                            </li>
 
                             <li class="w-100 ms-3">
                                 <a href="/dashboard" 
@@ -136,12 +149,14 @@ function Home( props) {
                                 
                                 > <h5><i class="fs-4 text-white bi-speedometer2"></i><span class="align-text-bottom ms-2 d-sm-inline text-white">My Posts</span></h5></a>
                             </li>
+
+                            
                             <li class="w-100 ms-3">
-                                <a href="/post" 
+                                <a href="/post-item" 
                                 
                                 
                                 class={`nav-link px-0  ${
-                                  window.location.pathname === "/post" ? "fw-bold" : ""
+                                  (window.location.pathname === "/post-item" | window.location.pathname === "/request-item") ? "fw-bold" : ""
                                 }`}
                                 
                                 > <h5><i class="fs-4 text-white bi-pen"></i><span class="align-text-bottom ms-2 d-sm-inline text-white">Post</span></h5></a>
@@ -194,7 +209,9 @@ function Home( props) {
   <Switch>
   <PrivateRoute exact path="/" component={() => <PostCards />} />          
     <PrivateRoute exact path="/dashboard" component={() => <DashboardCards />} />
-    <PrivateRoute exact path="/post" component={() => <Post />} />   
+    <PrivateRoute exact path="/post-item" component={() => <PostItem />} />   
+    <PrivateRoute exact path="/request-item" component={() => <RequestItem />} />   
+
     <PrivateRoute exact path="/About" component={() => <About />} />   
     <PrivateRoute exact path="/terms-of-use" component={() => <TermsOfUse />} />   
     <PrivateRoute exact path="/prohibited" component={() => <Prohibited />} />   
@@ -203,7 +220,7 @@ function Home( props) {
     <PrivateRoute exact path="/apparel" component={() => <ApparelCards />} /> 
     <PrivateRoute exact path="/room-items" component={() => <RoomItemCards />} /> 
     <PrivateRoute exact path="/free" component={() => <FreeItemCards />} /> 
-
+    <PrivateRoute exact path="/wanted" component={() => <WantedCards />} /> 
     <PrivateRoute exact path="/plannedFeatures" component={() => <PlannedFeatures />} /> 
 
 
@@ -290,6 +307,16 @@ function Home( props) {
                             
                         </ul>
                     </li>
+
+                    <li>
+                        <a href="/wanted" class={`nav-link px-0  ${
+                                  window.location.pathname === "/wanted" ? "fw-bold" : ""
+                                }`}>
+                            <i class="fs-4 text-white bi-search-heart"></i> <span class=" align-text-bottom  ms-1 text-white d-none d-sm-inline">Wanted</span> </a>
+                        
+                    </li>
+
+
                     <li>
                         <a href="/dashboard" class={`nav-link px-0  ${
                                   window.location.pathname === "/dashboard" ? "fw-bold" : ""
@@ -298,8 +325,8 @@ function Home( props) {
                         
                     </li>
                     <li>
-                        <a href="/post" class={`nav-link px-0  ${
-                                  window.location.pathname === "/post" ? "fw-bold" : ""
+                        <a href="/post-item" class={`nav-link px-0  ${
+                                  (window.location.pathname === "/request-item" | window.location.pathname === "/post-item") ? "fw-bold" : ""
                                 }`}>
                             <i class="fs-4 text-white bi-pen"></i> <span class=" align-text-bottom ms-1 text-white d-none d-sm-inline">Post</span></a>
                     </li>
@@ -345,7 +372,9 @@ function Home( props) {
   <Switch>
   <PrivateRoute exact path="/" component={() => <PostCards />} />          
     <PrivateRoute exact path="/dashboard" component={() => <DashboardCards />} />
-    <PrivateRoute exact path="/post" component={() => <Post />} />   
+    <PrivateRoute exact path="/post-item" component={() => <PostItem />} />   
+    <PrivateRoute exact path="/request-item" component={() => <RequestItem />} />   
+
     <PrivateRoute exact path="/About" component={() => <About />} />   
     <PrivateRoute exact path="/terms-of-use" component={() => <TermsOfUse />} />   
     <PrivateRoute exact path="/prohibited" component={() => <Prohibited />} />   
@@ -354,7 +383,7 @@ function Home( props) {
     <PrivateRoute exact path="/apparel" component={() => <ApparelCards />} /> 
     <PrivateRoute exact path="/room-items" component={() => <RoomItemCards />} /> 
     <PrivateRoute exact path="/free" component={() => <FreeItemCards />} /> 
-
+    <PrivateRoute exact path="/wanted" component={() => <WantedCards />} /> 
     <PrivateRoute exact path="/plannedFeatures" component={() => <PlannedFeatures />} /> 
 
 

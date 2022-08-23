@@ -32,6 +32,8 @@ function About() {
             Oliver Fried: 508-850-6770
             </p>
 
+            <p class="lead"><a href="https://github.com/oliver-fried/midtrade" >All website code is located at the Github repo here.</a></p>
+
             
             
 

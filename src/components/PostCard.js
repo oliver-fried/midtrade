@@ -15,6 +15,8 @@ const deleteComment = (postCardID, commentID) => {
 
 
 const CommentsDisplay = ( {postTime, postCommentsArray} ) => {
+
+
     if (!postCommentsArray) {
         return <div></div>
     }
@@ -22,8 +24,8 @@ const CommentsDisplay = ( {postTime, postCommentsArray} ) => {
     else {
         return (
             <div>
-                {postCommentsArray.map((comment) =>
-                    <div  >
+                {postCommentsArray.map((comment, k) =>
+                    <div key={k} >
 
 
                         <div class="d-block d-xs-block d-sm-none">
@@ -90,15 +92,10 @@ const CommentsDisplay = ( {postTime, postCommentsArray} ) => {
 const PostCard = ({ post, search, noStyle, pricePrinting, imageDec, setComment, timePrinting, comment, handleCommentSubmit, }) => {
     const [comments, setComments] = useState([])
     useEffect(() => onSnapshot(query(collection(getFirestore(), "posts/" + post.postTime + "/comments/")),
-        commentsSnapshot => setComments(commentsSnapshot.docs.map(doc => doc.data()))), [])
+        commentsSnapshot => setComments(commentsSnapshot.docs.map((doc => doc.data())))), [])
 
     return <div>
          <div>
-
-
-
-
-
 
 
             <div class="card mb-4">
@@ -120,9 +117,8 @@ const PostCard = ({ post, search, noStyle, pricePrinting, imageDec, setComment, 
                     </div>
 
                     <div class="card-body w-100">
-                        <p class="card-text text-muted">{timePrinting(post.postTime, post.date, post.room, post.initials)}</p>
-                    {post.phoneNumber ? <h6 class="card-text text-muted">{post.phoneNumber}</h6> : <></>}
-                        {post.downloadURL ? imageDec(post.downloadURL) : <div></div>}
+                        <p class="card-text text-muted">{timePrinting(post.postTime, post.date, post.room, post.initials, post.phoneNumber)}</p>
+                        {post.downloadURL ? imageDec(post.downloadURL, post.imageTitle) : <div></div>}
                     </div>
                 </a>
 
